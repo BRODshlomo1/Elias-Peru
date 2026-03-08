@@ -1,0 +1,1886 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>אליאס PRO</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;600;700;900&family=Fraunces:ital,wght@0,700;0,900;1,700&display=swap');
+
+:root {
+  --bg: #f5f0eb;
+  --bg2: #ede8e1;
+  --card: #ffffff;
+  --card2: #faf8f5;
+  --border: #e0d8ce;
+  --text: #1a1410;
+  --sub: #6b5e52;
+  --muted: #a8998a;
+  --p1: #e8421a;
+  --p2: #1a72e8;
+  --p3: #1a9e6b;
+  --p4: #9b1ae8;
+  --gold: #d4920a;
+  --green: #1a9e6b;
+  --red: #e8421a;
+  --shadow: 0 2px 16px rgba(26,20,16,0.08);
+  --shadow-lg: 0 8px 40px rgba(26,20,16,0.12);
+}
+
+body.dark {
+  --bg: #111014;
+  --bg2: #1a1820;
+  --card: #1e1c24;
+  --card2: #252330;
+  --border: #2e2a38;
+  --text: #f0ecf8;
+  --sub: #a89ec0;
+  --muted: #6b6280;
+  --gold: #e8b430;
+  --green: #22c97e;
+  --shadow: 0 2px 16px rgba(0,0,0,0.35);
+  --shadow-lg: 0 8px 40px rgba(0,0,0,0.5);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Heebo', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 16px 50px;
+  background-image: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(232,66,26,0.06) 0%, transparent 70%);
+  transition: background 0.4s, color 0.4s;
+}
+
+body.dark {
+  background-image: radial-gradient(ellipse 80% 50% at 50% -10%, rgba(155,26,232,0.08) 0%, transparent 70%);
+}
+
+/* ── TOP BAR ── */
+.top-bar {
+  width: 100%; max-width: 560px;
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 8px;
+}
+.dark-toggle {
+  background: var(--bg2); border: 1.5px solid var(--border);
+  border-radius: 50%; width: 38px; height: 38px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 1.1rem; transition: all 0.2s;
+}
+.dark-toggle:hover { transform: rotate(20deg); }
+
+/* ── LOGO ── */
+.logo {
+  font-family: 'Fraunces', serif;
+  font-size: 3rem;
+  font-weight: 900;
+  color: var(--text);
+  letter-spacing: -1px;
+  margin-bottom: 2px;
+  text-align: center;
+}
+.logo span { color: var(--p1); }
+.tagline { color: var(--muted); font-size: 0.75rem; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 28px; text-align: center; }
+
+/* ── SCREENS ── */
+.screen { width: 100%; max-width: 560px; display: none; }
+.screen.active { display: block; }
+
+/* ── CARD ── */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 28px;
+  margin-bottom: 14px;
+  box-shadow: var(--shadow);
+  transition: background 0.4s, border-color 0.4s;
+}
+
+/* ── PLAYER GRID ── */
+.player-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+.player-grid-4 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+.pfield label { display: block; font-size: 0.7rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+.lp1 { color: var(--p1); } .lp2 { color: var(--p2); } .lp3 { color: var(--p3); } .lp4 { color: var(--p4); }
+
+/* player count selector */
+.pcount-row { display: flex; gap: 8px; margin-bottom: 20px; }
+.pc-btn {
+  flex: 1; padding: 10px 6px; border-radius: 12px; border: 2px solid var(--border);
+  background: var(--bg2); color: var(--sub); cursor: pointer;
+  font-family: 'Heebo', sans-serif; font-size: 0.9rem; font-weight: 700;
+  transition: all 0.2s; text-align: center;
+}
+.pc-btn.sel { background: var(--p1); color: white; border-color: var(--p1); }
+
+input[type=text] {
+  width: 100%; padding: 12px 14px;
+  background: var(--bg2); border: 2px solid var(--border);
+  border-radius: 12px; color: var(--text);
+  font-family: 'Heebo', sans-serif; font-size: 1rem; font-weight: 600;
+  outline: none; transition: border-color 0.2s, background 0.2s;
+  text-align: center;
+}
+input[type=text]:focus { border-color: var(--p2); background: var(--card); }
+
+/* ── SLIDERS ── */
+.slider-section { margin-bottom: 22px; }
+.slider-label { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
+.slider-label span:first-child { font-size: 0.7rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--sub); }
+.slider-val { font-family: 'Fraunces', serif; font-size: 1.5rem; font-weight: 700; color: var(--text); }
+.slider-val sup { font-size: 0.75rem; color: var(--muted); font-family: 'Heebo', sans-serif; font-weight: 600; }
+
+.slider-wrap { position: relative; height: 40px; display: flex; align-items: center; }
+input[type=range] {
+  -webkit-appearance: none; appearance: none;
+  width: 100%; height: 6px;
+  border-radius: 3px; outline: none; cursor: pointer;
+  background: linear-gradient(to left, var(--border) 0%, var(--border) 100%);
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: var(--card);
+  border: 3px solid var(--p1);
+  box-shadow: 0 2px 8px rgba(232,66,26,0.3);
+  cursor: pointer; transition: transform 0.15s;
+}
+input[type=range]::-webkit-slider-thumb:active { transform: scale(1.2); }
+input[type=range]::-moz-range-thumb {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--card); border: 3px solid var(--p1);
+  box-shadow: 0 2px 8px rgba(232,66,26,0.3); cursor: pointer;
+}
+
+/* ── BUTTON ── */
+.btn {
+  display: block; width: 100%; padding: 15px 20px;
+  border: none; border-radius: 14px; cursor: pointer;
+  font-family: 'Heebo', sans-serif; font-size: 1rem; font-weight: 700;
+  transition: all 0.18s; text-align: center; letter-spacing: 0.3px;
+}
+.btn-primary { background: var(--p1); color: white; box-shadow: 0 4px 16px rgba(232,66,26,0.35); }
+.btn-primary:hover { filter: brightness(1.08); transform: translateY(-1px); }
+.btn-primary:active { transform: translateY(0); }
+.btn-ghost { background: var(--bg2); color: var(--sub); border: 1.5px solid var(--border); }
+.btn-ghost:hover { background: var(--border); color: var(--text); }
+.btn-green { background: var(--green); color: white; box-shadow: 0 4px 16px rgba(26,158,107,0.3); }
+.btn-green:hover { filter: brightness(1.08); transform: translateY(-1px); }
+.btn-sm { padding: 10px 14px; font-size: 0.85rem; width: auto; border-radius: 10px; }
+.btn-danger { background: #c0392b; color: white; }
+.btn-danger:hover { filter: brightness(1.1); }
+
+/* ── MENU ROWS ── */
+.menu-btn-row { display: flex; gap: 10px; margin-bottom: 14px; }
+.section-title { font-size: 0.68rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+
+/* ── SCOREBOARD ── */
+.scores { display: grid; gap: 10px; margin-bottom: 14px; }
+.scores.p2 { grid-template-columns: 1fr 1fr; }
+.scores.p3 { grid-template-columns: 1fr 1fr 1fr; }
+.scores.p4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+.sc-card {
+  background: var(--card); border: 2px solid var(--border);
+  border-radius: 18px; padding: 14px 10px; text-align: center;
+  transition: all 0.3s; position: relative; overflow: hidden;
+}
+.sc-card::after { content:''; position:absolute; bottom:0; left:0; right:0; height:4px; background:var(--border); transition:background 0.3s; }
+.sc-card.a0 { border-color: rgba(232,66,26,0.3); box-shadow: 0 4px 20px rgba(232,66,26,0.1); }
+.sc-card.a0::after { background: var(--p1); }
+.sc-card.a1 { border-color: rgba(26,114,232,0.3); box-shadow: 0 4px 20px rgba(26,114,232,0.1); }
+.sc-card.a1::after { background: var(--p2); }
+.sc-card.a2 { border-color: rgba(26,158,107,0.3); box-shadow: 0 4px 20px rgba(26,158,107,0.1); }
+.sc-card.a2::after { background: var(--p3); }
+.sc-card.a3 { border-color: rgba(155,26,232,0.3); box-shadow: 0 4px 20px rgba(155,26,232,0.1); }
+.sc-card.a3::after { background: var(--p4); }
+.sc-name { font-size: 0.65rem; font-weight: 700; letter-spacing: 1px; color: var(--muted); text-transform: uppercase; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sc-num { font-family: 'Fraunces', serif; font-size: 2.2rem; font-weight: 900; line-height: 1; margin-bottom: 4px; }
+.sc-target { font-size: 0.62rem; color: var(--muted); margin-bottom: 6px; }
+.pips { display: flex; gap: 2px; flex-wrap: wrap; justify-content: center; }
+.pip { height: 4px; border-radius: 2px; background: var(--border); flex: 1; min-width: 3px; max-width: 14px; transition: background 0.25s; }
+.pip.f0 { background: var(--p1); }
+.pip.f1 { background: var(--p2); }
+.pip.f2 { background: var(--p3); }
+.pip.f3 { background: var(--p4); }
+.c0 { color: var(--p1); } .c1 { color: var(--p2); } .c2 { color: var(--p3); } .c3 { color: var(--p4); }
+
+/* ── GAME CARD ── */
+.game-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 20px; padding: 22px;
+  box-shadow: var(--shadow);
+  position: relative; overflow: hidden;
+}
+
+/* turn + timer row */
+.turn-row { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.turn-pill {
+  font-size: 0.68rem; font-weight: 700; letter-spacing: 2px;
+  text-transform: uppercase; padding: 6px 14px; border-radius: 20px; white-space: nowrap;
+}
+.tp0 { background: rgba(232,66,26,0.1); color: var(--p1); border: 1.5px solid rgba(232,66,26,0.2); }
+.tp1 { background: rgba(26,114,232,0.1); color: var(--p2); border: 1.5px solid rgba(26,114,232,0.2); }
+.tp2 { background: rgba(26,158,107,0.1); color: var(--p3); border: 1.5px solid rgba(26,158,107,0.2); }
+.tp3 { background: rgba(155,26,232,0.1); color: var(--p4); border: 1.5px solid rgba(155,26,232,0.2); }
+.timer-wrap { flex: 1; display: flex; align-items: center; gap: 8px; }
+.t-num { font-family: 'Fraunces', serif; font-size: 1.9rem; font-weight: 700; min-width: 42px; text-align: center; transition: color 0.3s; }
+.t-bar-bg { flex: 1; height: 7px; background: var(--bg2); border-radius: 4px; overflow: hidden; border: 1px solid var(--border); }
+.t-bar { height: 100%; border-radius: 4px; background: var(--green); transition: width 1s linear, background 0.5s; }
+
+/* clue */
+.clue-box {
+  background: var(--card2); border: 1.5px solid var(--border);
+  border-radius: 14px; padding: 16px 18px;
+  font-size: 1.05rem; font-weight: 500; line-height: 1.65;
+  color: var(--sub); margin: 14px 0;
+  min-height: 70px; display: flex; align-items: center; justify-content: center; text-align: center;
+  transition: background 0.4s;
+}
+
+/* ── LETTER BOXES ── */
+.letter-row {
+  display: flex; gap: 5px; justify-content: center;
+  flex-wrap: wrap; margin: 14px 0 8px; min-height: 52px;
+  align-items: flex-end; direction: rtl;
+}
+.word-group { display: flex; gap: 4px; direction: rtl; }
+.word-sp { width: 10px; }
+.lbox {
+  width: 36px; height: 44px;
+  background: var(--bg2); border: 2px solid var(--border);
+  border-radius: 8px; display: flex; align-items: center; justify-content: center;
+  font-family: 'Fraunces', serif; font-size: 1.3rem; font-weight: 700;
+  color: var(--text); transition: all 0.15s;
+}
+.lbox.cur { border-color: var(--p2); background: rgba(26,114,232,0.06); box-shadow: 0 0 0 3px rgba(26,114,232,0.12); }
+.lbox.sel { border-color: var(--gold); background: rgba(212,146,10,0.10); box-shadow: 0 0 0 3px rgba(212,146,10,0.22); cursor: text; animation: selPulse 0.9s ease-in-out infinite; }
+.lbox.ok { background: rgba(26,158,107,0.1); border-color: var(--green); color: var(--green); animation: popG 0.3s ease; }
+.lbox.bad { background: rgba(232,66,26,0.08); border-color: var(--red); color: var(--red); animation: shk 0.3s ease; }
+.lbox:not(.ok):not(.bad) { cursor: pointer; }
+@keyframes selPulse { 0%,100%{box-shadow:0 0 0 3px rgba(212,146,10,0.22)}50%{box-shadow:0 0 0 5px rgba(212,146,10,0.38)} }
+@keyframes popG { 0%{transform:scale(1)}50%{transform:scale(1.18)}100%{transform:scale(1)} }
+@keyframes shk { 0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)} }
+
+/* HIDDEN REAL INPUT */
+#real-input {
+  position: fixed; top: 50%; left: 50%;
+  opacity: 0; width: 1px; height: 1px;
+  font-size: 16px; border: none; outline: none;
+  pointer-events: none; transform: translate(-50%, -50%);
+}
+
+/* attempt dots */
+.adots { display: flex; gap: 6px; align-items: center; justify-content: center; margin: 6px 0 12px; }
+.adot-label { font-size: 0.68rem; color: var(--muted); margin-left: 4px; }
+.adot { width: 9px; height: 9px; border-radius: 50%; background: var(--bg2); border: 2px solid var(--border); transition: all 0.2s; }
+.adot.bad { background: var(--red); border-color: var(--red); }
+
+/* divider */
+.div { border: none; border-top: 1.5px solid var(--border); margin: 12px 0; }
+
+/* action row */
+.action-row { display: flex; gap: 8px; }
+.hint-wrap { position: relative; flex: 1; }
+.hint-badge {
+  position: absolute; top: -8px; right: -8px;
+  font-size: 0.58rem; font-weight: 900; padding: 2px 6px; border-radius: 8px;
+  background: var(--green); color: white;
+}
+
+/* ── SURPRISE OVERLAY ── */
+.surp-ov {
+  position: fixed; inset: 0;
+  background: rgba(245,240,235,0.82);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 100; backdrop-filter: blur(8px);
+  opacity: 0; pointer-events: none; transition: opacity 0.3s;
+}
+body.dark .surp-ov { background: rgba(17,16,20,0.85); }
+.surp-ov.show { opacity: 1; pointer-events: all; }
+.surp-box {
+  background: var(--card); border: 2px solid var(--gold);
+  border-radius: 24px; padding: 36px 28px; text-align: center;
+  max-width: 320px; width: 90%;
+  box-shadow: 0 16px 60px rgba(212,146,10,0.2);
+  transform: scale(0.85); transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+}
+.surp-ov.show .surp-box { transform: scale(1); }
+.surp-icon { font-size: 3.5rem; display: block; margin-bottom: 10px; }
+.surp-title { font-family: 'Fraunces', serif; font-size: 1.5rem; font-weight: 900; color: var(--gold); margin-bottom: 8px; }
+.surp-desc { color: var(--sub); font-size: 0.9rem; line-height: 1.55; margin-bottom: 20px; }
+
+/* ── PLAYER TRANSITION OVERLAY ── */
+.ptrans-ov {
+  position: fixed; inset: 0;
+  background: rgba(245,240,235,0.92);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 110; backdrop-filter: blur(10px);
+  opacity: 0; pointer-events: none; transition: opacity 0.35s;
+}
+body.dark .ptrans-ov { background: rgba(17,16,20,0.93); }
+.ptrans-ov.show { opacity: 1; pointer-events: all; }
+.ptrans-box {
+  background: var(--card); border: 2px solid var(--border);
+  border-radius: 28px; padding: 40px 32px; text-align: center;
+  max-width: 340px; width: 92%;
+  box-shadow: var(--shadow-lg);
+  transform: scale(0.88) translateY(20px);
+  transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+.ptrans-ov.show .ptrans-box { transform: scale(1) translateY(0); }
+.ptrans-emoji { font-size: 3rem; margin-bottom: 14px; display: block; animation: bounce 0.6s ease; }
+@keyframes bounce { 0%{transform:translateY(0)} 40%{transform:translateY(-12px)} 70%{transform:translateY(-6px)} 100%{transform:translateY(0)} }
+.ptrans-title { font-family: 'Fraunces', serif; font-size: 1.8rem; font-weight: 900; margin-bottom: 8px; }
+.ptrans-sub { color: var(--sub); font-size: 0.9rem; margin-bottom: 28px; line-height: 1.5; }
+.ptrans-scores { display: flex; gap: 10px; justify-content: center; margin-bottom: 24px; flex-wrap: wrap; }
+.pts-mini { padding: 8px 14px; border-radius: 12px; border: 1.5px solid var(--border); background: var(--bg2); text-align: center; min-width: 70px; }
+.pts-mini-name { font-size: 0.6rem; font-weight: 700; letter-spacing: 1px; color: var(--muted); text-transform: uppercase; }
+.pts-mini-sc { font-family: 'Fraunces', serif; font-size: 1.5rem; font-weight: 900; }
+
+/* ── WIN ── */
+#win-screen { text-align: center; }
+.confetti-wrap { position: relative; overflow: visible; }
+.win-trophy { font-size: 5rem; display: block; animation: flt 2s ease-in-out infinite; margin-bottom: 4px; filter: drop-shadow(0 4px 16px rgba(212,146,10,0.4)); }
+@keyframes flt { 0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-12px) rotate(3deg)} }
+.win-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--gold), #f5c842);
+  color: #3d2800;
+  padding: 4px 18px; border-radius: 20px;
+  font-size: 0.7rem; font-weight: 900; letter-spacing: 2px; text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.win-title { font-family: 'Fraunces', serif; font-size: 2.6rem; font-weight: 900; margin-bottom: 6px; line-height: 1.1; }
+.win-sub { color: var(--muted); margin-bottom: 24px; font-size: 0.9rem; }
+.final-row { display: flex; gap: 12px; justify-content: center; margin-bottom: 24px; flex-wrap: wrap; }
+.fc {
+  background: var(--card); border: 1.5px solid var(--border);
+  border-radius: 18px; padding: 18px 20px; min-width: 100px;
+  box-shadow: var(--shadow); position: relative; overflow: hidden; text-align: center;
+}
+.fc.winner { border-color: var(--gold); box-shadow: 0 4px 24px rgba(212,146,10,0.25); }
+.fc.winner::before { content:'👑'; position:absolute; top:-4px; right:50%; transform:translateX(50%); font-size:1.2rem; }
+.fc-name { font-size: 0.68rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; margin-top: 10px; }
+.fc-sc { font-family: 'Fraunces', serif; font-size: 2.6rem; font-weight: 900; }
+.win-actions { display: flex; flex-direction: column; gap: 10px; }
+.win-stats-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 20px; }
+.win-stat { background: var(--bg2); border-radius: 12px; padding: 12px 8px; text-align: center; border: 1px solid var(--border); }
+.win-stat-val { font-family: 'Fraunces', serif; font-size: 1.4rem; font-weight: 900; color: var(--text); }
+.win-stat-lbl { font-size: 0.6rem; color: var(--muted); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
+
+/* ── CONFETTI ── */
+.confetti-piece {
+  position: fixed;
+  width: 10px; height: 10px;
+  pointer-events: none;
+  z-index: 999;
+  animation: cfalli var(--dur) ease-in forwards;
+  border-radius: var(--br);
+}
+@keyframes cfalli {
+  0% { transform: translate(0, -10vh) rotate(0deg); opacity: 1; }
+  80% { opacity: 1; }
+  100% { transform: translate(var(--tx), 110vh) rotate(var(--rot)); opacity: 0; }
+}
+
+/* ── LEADERBOARD ── */
+#leaderboard-screen .card { padding: 22px; }
+.lb-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 0; border-bottom: 1px solid var(--border);
+}
+.lb-row:last-child { border-bottom: none; }
+.lb-rank { font-family: 'Fraunces', serif; font-size: 1.5rem; font-weight: 900; width: 36px; text-align: center; }
+.lb-rank.gold { color: #d4920a; }
+.lb-rank.silver { color: #8a9eb0; }
+.lb-rank.bronze { color: #b06840; }
+.lb-info { flex: 1; }
+.lb-name { font-weight: 700; font-size: 1rem; color: var(--text); }
+.lb-meta { font-size: 0.72rem; color: var(--muted); margin-top: 1px; }
+.lb-score { font-family: 'Fraunces', serif; font-size: 1.8rem; font-weight: 900; color: var(--gold); }
+.lb-empty { text-align: center; color: var(--muted); padding: 40px 0; font-size: 0.9rem; }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed; bottom: 28px; left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--text); color: var(--bg);
+  border-radius: 30px; padding: 10px 22px;
+  font-size: 0.88rem; font-weight: 700;
+  transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s;
+  opacity: 0; z-index: 300; white-space: nowrap; pointer-events: none;
+}
+.toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+/* ── WOBBLY FUN ELEMENTS ── */
+@keyframes wiggle { 0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)} }
+.fun-pulse { animation: pulse 1.5s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{transform:scale(1)}50%{transform:scale(1.06)} }
+.streak-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: linear-gradient(135deg, #ff6b35, #ff9500);
+  color: white; padding: 4px 12px; border-radius: 14px;
+  font-size: 0.75rem; font-weight: 900; margin-bottom: 8px;
+  animation: streakPop 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes streakPop { 0%{transform:scale(0) rotate(-10deg)}100%{transform:scale(1) rotate(0)} }
+.streak-area { text-align: center; min-height: 28px; margin-bottom: 4px; }
+.quit-btn {
+  position: absolute; top: 10px; left: 10px;
+  background: transparent; border: none; cursor: pointer;
+  font-size: 1.1rem; color: var(--muted); padding: 4px;
+  border-radius: 8px; transition: all 0.2s;
+}
+.quit-btn:hover { background: rgba(232,66,26,0.08); color: var(--red); }
+
+/* Firework sparkle */
+@keyframes sparkle {
+  0%{transform:scale(0) rotate(0deg);opacity:1}
+  100%{transform:scale(1.5) rotate(180deg);opacity:0}
+}
+.sparkle { position:fixed; pointer-events:none; z-index:200; font-size:1.5rem; animation: sparkle 0.7s ease-out forwards; }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div style="width:38px"></div>
+  <div>
+    <div class="logo">ALIAS <span>PRO</span></div>
+    <p class="tagline">משחק ניחוש • עברית</p>
+  </div>
+  <button class="dark-toggle" id="dark-toggle" onclick="toggleDark()" title="מצב לילה">🌙</button>
+</div>
+
+<!-- ══ SETUP ══ -->
+<div id="setup-screen" class="screen active">
+  <div class="card">
+    <div class="section-title">מספר שחקנים</div>
+    <div class="pcount-row">
+      <button class="pc-btn sel" onclick="setPlayerCount(2)">2 👥</button>
+      <button class="pc-btn" onclick="setPlayerCount(3)">3 👥</button>
+      <button class="pc-btn" onclick="setPlayerCount(4)">4 👥</button>
+    </div>
+
+    <div class="section-title">שמות שחקנים</div>
+    <div class="player-grid-4" id="player-inputs">
+      <div class="pfield"><label class="lp1">🔴 שחקן 1</label><input type="text" id="p1-name" value="שחקן 1"></div>
+      <div class="pfield"><label class="lp2">🔵 שחקן 2</label><input type="text" id="p2-name" value="שחקן 2"></div>
+    </div>
+
+    <div class="slider-section">
+      <div class="slider-label">
+        <span>🏆 יעד לניצחון</span>
+        <span class="slider-val" id="win-val">15</span>
+      </div>
+      <div class="slider-wrap">
+        <input type="range" id="win-slider" min="5" max="30" step="5" value="15" oninput="updateSlider('win')">
+      </div>
+    </div>
+
+    <div class="slider-section">
+      <div class="slider-label">
+        <span>⏱️ זמן לתור</span>
+        <span class="slider-val" id="time-val">45<sup>״</sup></span>
+      </div>
+      <div class="slider-wrap">
+        <input type="range" id="time-slider" min="30" max="90" step="15" value="45" oninput="updateSlider('time')">
+      </div>
+    </div>
+
+    <button class="btn btn-primary" onclick="startGame()" style="margin-bottom:10px">🚀 התחילו לשחק!</button>
+    <button class="btn btn-ghost" onclick="showScreen('leaderboard-screen')">🏅 שיאים</button>
+  </div>
+</div>
+
+<!-- ══ GAME ══ -->
+<div id="game-screen" class="screen">
+  <div class="scores p2" id="scores-grid"></div>
+
+  <div class="game-card">
+    <input id="real-input" type="text" inputmode="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+    <button class="quit-btn" onclick="confirmQuit()" title="יציאה למשחק">✕</button>
+
+    <div class="turn-row">
+      <div class="turn-pill tp0" id="turn-pill">תור שחקן 1</div>
+      <div class="timer-wrap">
+        <div class="t-num" id="t-num" style="color:var(--green)">45</div>
+        <div class="t-bar-bg"><div class="t-bar" id="t-bar" style="width:100%"></div></div>
+      </div>
+    </div>
+
+    <div class="streak-area" id="streak-area"></div>
+    <div class="clue-box" id="clue-box">טוען...</div>
+    <div class="letter-row" id="letter-row"></div>
+
+    <div class="adots">
+      <span class="adot-label">ניסיונות:</span>
+      <div class="adot" id="d0"></div>
+      <div class="adot" id="d1"></div>
+      <div class="adot" id="d2"></div>
+    </div>
+
+    <hr class="div">
+
+    <div class="action-row">
+      <div class="hint-wrap">
+        <button class="btn btn-ghost btn-sm" id="hint-btn" onclick="useHint()" style="width:100%">💡 רמז</button>
+        <span class="hint-badge" id="hint-badge">FREE</span>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="skipWord()" style="flex:1">⏭ דלג</button>
+      <button class="btn btn-green btn-sm" onclick="submitAnswer()" style="flex:2">✓ בדיקה</button>
+    </div>
+    <div style="margin-top:8px;text-align:center;color:var(--muted);font-size:0.7rem;">הקלד ולחץ Enter — או לחץ על הכרטיס לפתיחת מקלדת</div>
+  </div>
+</div>
+
+<!-- ══ WIN ══ -->
+<div id="win-screen" class="screen">
+  <div class="confetti-wrap">
+    <span class="win-trophy" id="win-trophy">🏆</span>
+  </div>
+  <div class="win-badge">🎉 ניצחון!</div>
+  <div class="win-title" id="win-title">שחקן 1 ניצח!</div>
+  <div class="win-sub" id="win-sub">סיים עם 15 נקודות</div>
+  <div class="win-stats-row" id="win-stats-row"></div>
+  <div class="final-row" id="final-row"></div>
+  <div class="win-actions">
+    <button class="btn btn-primary" onclick="location.reload()">🔄 משחק חדש</button>
+    <button class="btn btn-ghost" onclick="showScreen('leaderboard-screen')">🏅 לוח שיאים</button>
+  </div>
+</div>
+
+<!-- ══ LEADERBOARD ══ -->
+<div id="leaderboard-screen" class="screen">
+  <div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;">
+      <div style="font-family:'Fraunces',serif;font-size:1.5rem;font-weight:900;">🏅 לוח שיאים</div>
+      <button class="btn btn-ghost btn-sm" onclick="clearLeaderboard()">מחק</button>
+    </div>
+    <div id="lb-list"></div>
+  </div>
+  <button class="btn btn-ghost" onclick="showScreen('setup-screen')" style="margin-top:4px">← חזרה</button>
+</div>
+
+<!-- ══ SURPRISE ══ -->
+<div class="surp-ov" id="surp-ov">
+  <div class="surp-box">
+    <span class="surp-icon" id="surp-icon">🎁</span>
+    <div class="surp-title" id="surp-title">הפתעה!</div>
+    <div class="surp-desc" id="surp-desc"></div>
+    <button class="btn btn-primary" onclick="closeSurprise()">יאללה! 💪</button>
+  </div>
+</div>
+
+<!-- ══ PLAYER TRANSITION ══ -->
+<div class="ptrans-ov" id="ptrans-ov">
+  <div class="ptrans-box">
+    <span class="ptrans-emoji" id="ptrans-emoji">🎮</span>
+    <div class="ptrans-title" id="ptrans-title">תור שחקן 2</div>
+    <div class="ptrans-sub" id="ptrans-sub">מסור את המכשיר לשחקן הבא!</div>
+    <div class="ptrans-scores" id="ptrans-scores"></div>
+    <button class="btn btn-primary" id="ptrans-start-btn" onclick="closeTrans()">▶ התחלה!</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══ DARK MODE ═══
+let darkMode = localStorage.getItem('alias-dark') === '1';
+if (darkMode) document.body.classList.add('dark');
+document.getElementById('dark-toggle').textContent = darkMode ? '☀️' : '🌙';
+
+function toggleDark() {
+  darkMode = !darkMode;
+  document.body.classList.toggle('dark', darkMode);
+  document.getElementById('dark-toggle').textContent = darkMode ? '☀️' : '🌙';
+  localStorage.setItem('alias-dark', darkMode ? '1' : '0');
+}
+
+// ═══ SLIDER ═══
+function updateSlider(type) {
+  if (type === 'win') {
+    const v = document.getElementById('win-slider').value;
+    document.getElementById('win-val').innerHTML = v;
+    updateSliderTrack('win-slider', (v - 5) / 25);
+  } else {
+    const v = document.getElementById('time-slider').value;
+    document.getElementById('time-val').innerHTML = v + '<sup>״</sup>';
+    updateSliderTrack('time-slider', (v - 30) / 60);
+  }
+}
+function updateSliderTrack(id, pct) {
+  const el = document.getElementById(id);
+  el.style.background = `linear-gradient(to left, var(--p1) ${pct*100}%, var(--border) ${pct*100}%)`;
+}
+updateSliderTrack('win-slider', (15-5)/25);
+updateSliderTrack('time-slider', (45-30)/60);
+
+// ═══ PLAYER COUNT ═══
+let playerCount = 2;
+function setPlayerCount(n) {
+  playerCount = n;
+  document.querySelectorAll('.pc-btn').forEach((b, i) => b.classList.toggle('sel', i === n - 2));
+  const grid = document.getElementById('player-inputs');
+  const colors = ['lp1','lp2','lp3','lp4'];
+  const emojis = ['🔴','🔵','🟢','🟣'];
+  const defaults = ['שחקן 1','שחקן 2','שחקן 3','שחקן 4'];
+  grid.innerHTML = '';
+  for (let i = 1; i <= n; i++) {
+    const div = document.createElement('div');
+    div.className = 'pfield';
+    div.innerHTML = `<label class="${colors[i-1]}">${emojis[i-1]} שחקן ${i}</label><input type="text" id="p${i}-name" value="${defaults[i-1]}">`;
+    grid.appendChild(div);
+  }
+}
+
+// ═══ DATABASE ═══
+const DB = [
+  {w:"ארכיאולוג",c:"הוא חופר בעבר, תרתי משמע. מחפש שרידים של תרבויות עתיקות מתחת לאדמה."},
+  {w:"נוסטלגיה",c:"רגש של געגוע מתוק-מריר לעבר, למשהו שכבר לא יחזור."},
+  {w:"אופטימיות",c:"היכולת לראות את חצי הכוס המלאה גם כשיש סערה בחוץ."},
+  {w:"פירמידה",c:"מבנה הנדסי עתיק בגיזה, אבל גם מודל כלכלי אסור ומסוכן."},
+  {w:"מצפון",c:"הקול הפנימי שאומר לך מה נכון ומה לא, גם כשאיש לא רואה."},
+  {w:"סימפוניה",c:"יצירה מוזיקלית מורכבת המנוגנת על ידי עשרות נגנים בו זמנית."},
+  {w:"קמפיין",c:"סדרה של פעולות מתוכננות לקידום מטרה, כמו בחירות או פרסום מוצר."},
+  {w:"אלגוריתם",c:"סדרת פעולות מתמטית שפותרת בעיה. המוח מאחורי גוגל ופייסבוק."},
+  {w:"אנונימיות",c:"המצב שבו אדם פועל בלי שזהותו תהיה ידועה לציבור."},
+  {w:"צונאמי",c:"גל ענק שנגרם מרעידת אדמה בלב ים וגורם להרס רב בחופים."},
+  {w:"דילמה",c:"מצב שבו צריך לבחור בין שתי אפשרויות קשות, ולכל אחת יש חסרונות."},
+  {w:"רנסנס",c:"תקופת התחייה של האמנות והמדע באירופה אחרי ימי הביניים."},
+  {w:"פרוטוקול",c:"כללי התנהגות רשמיים באירועים ממלכתיים, או שפת תקשורת בין מחשבים."},
+  {w:"אוטופיה",c:"תיאור של חברה מושלמת שבה הכל טוב, אבל כנראה לא קיימת במציאות."},
+  {w:"כבידה",c:"הכוח הבלתי נראה שמושך אותנו למרכז כדור הארץ ומונע מאיתנו לרחף."},
+  {w:"מטאפורה",c:"השאלה לשונית. להגיד על מישהו שהוא אריה בלי שהוא באמת חיה."},
+  {w:"בירוקרטיה",c:"מערכת של פקידים, טפסים ותהליכים מסורבלים שמעכבים דברים."},
+  {w:"פזמון",c:"החלק בשיר שחוזר על עצמו אחרי כל בית, בדרך כלל הכי קליט."},
+  {w:"לוויין",c:"גוף שחג סביב כוכב לכת. יכול להיות טבעי כמו הירח או מלאכותי לתקשורת."},
+  {w:"צנזורה",c:"מניעה של פרסום מידע או יצירה מטעמי ביטחון או מוסר."},
+  {w:"אינפלציה",c:"תהליך כלכלי שבו הכסף מאבד מערכו והמחירים בשוק עולים."},
+  {w:"מצפן",c:"מכשיר ניווט המשתמש בשדה המגנטי של כדור הארץ כדי להראות את הצפון."},
+  {w:"קואליציה",c:"שיתוף פעולה בין כמה מפלגות כדי להקים ממשלה."},
+  {w:"הסגר",c:"מצב שבו נאסר על אנשים לצאת מביתם, בדרך כלל בגלל מגפה."},
+  {w:"דמוקרטיה",c:"שיטת שלטון שבה הכוח נמצא בידי העם, המיוצג על ידי נבחרים."},
+  {w:"גנטיקה",c:"תחום בביולוגיה שעוסק בתורשה ובדמיון שבין הורים לילדיהם."},
+  {w:"אסטרטגיה",c:"תכנית פעולה ארוכת טווח להשגת מטרה גדולה."},
+  {w:"פילוסופיה",c:"אהבת החכמה. עיסוק בשאלות הקיומיות של החיים."},
+  {w:"חמצן",c:"יסוד כימי חיוני לנשימה, מהווה כחמישית מהאוויר שאנו נושמים."},
+  {w:"פרדוקס",c:"סתירה פנימית. מצב שנראה הגיוני אבל מוביל לתוצאה בלתי אפשרית."},
+  {w:"מיקרוסקופ",c:"מכשיר אופטי המאפשר לראות עצמים זעירים מדי לעין אנושית."},
+  {w:"קולנוע",c:"האמנות השביעית. הקרנת תמונות נעות על מסך גדול."},
+  {w:"דרכון",c:"תעודה רשמית המאפשרת לאזרח לעבור בין מדינות."},
+  {w:"נרקיסיזם",c:"אהבה עצמית מופרזת, קרוי על שם דמות מהמיתולוגיה היוונית."},
+  {w:"אבולוציה",c:"תהליך של שינוי והתפתחות הדרגתית של יצורים חיים לאורך דורות."},
+  {w:"צדקה",c:"נתינת כסף או עזרה לאנשים נזקקים, מתוך חובה מוסרית."},
+  {w:"בינה מלאכותית",c:"טכנולוגיה המאפשרת למכונות לחשוב ולבצע משימות אנושיות."},
+  {w:"גלובליזציה",c:"תהליך שבו העולם הופך לכפר גלובלי עם קשרי מסחר ותרבות הדוקים."},
+  {w:"פרובוקציה",c:"פעולה מכוונת שנועדה לעורר תגובה חריפה או כעס."},
+  {w:"מוטיבציה",c:"הדחף הפנימי שגורם לנו לפעול ולהשיג מטרות."},
+  {w:"תסריט",c:"הטקסט הכתוב שעל פיו מצלמים סרט או סדרת טלוויזיה."},
+  {w:"פסיכולוג",c:"איש מקצוע המטפל בנפש האדם ובהתנהגותו."},
+  {w:"סטריאוטיפ",c:"דעה קדומה ומוכנית על קבוצת אנשים מסוימת."},
+  {w:"כימיה",c:"המדע העוסק במבנה החומר ובתגובות בין חומרים שונים."},
+  {w:"אלרגיה",c:"תגובה מוגזמת של מערכת החיסון לחומר שבדרך כלל אינו מזיק."},
+  {w:"שגריר",c:"נציג רשמי של מדינה הנמצא במדינה זרה."},
+  {w:"גורל",c:"האמונה שהכל קבוע מראש ואי אפשר לשנות את מה שיקרה."},
+  {w:"שחמט",c:"משחק מלכים המבוסס על אסטרטגיה, חיילים, ורצים."},
+  {w:"אנרגיה",c:"היכולת לבצע עבודה. יכולה להיות חשמלית, סולארית או מכנית."},
+  {w:"חסינות",c:"הגנה משפטית מפני העמדה לדין, או הגנה של הגוף מפני מחלות."},
+  {w:"הוריקן",c:"סופה טרופית עזה עם רוחות חזקות מאוד וגשמים כבדים."},
+  {w:"פנורמה",c:"נוף רחב ידיים הנשקף מנקודת תצפית גבוהה."},
+  {w:"מיתולוגיה",c:"אוסף של סיפורי עם ואלים מתרבויות עתיקות."},
+  {w:"סובלנות",c:"היכולת לקבל את האחר ואת דעותיו גם אם הן שונות משלך."},
+  {w:"אינטואיציה",c:"תחושת בטן. ידיעה של משהו בלי הסבר רציונלי."},
+  {w:"מונרכיה",c:"שיטת שלטון שבה בראש המדינה עומד מלך או מלכה."},
+  {w:"ביוגרפיה",c:"סיפור חייו של אדם שנכתב על ידי מישהו אחר."},
+  {w:"קומדיה",c:"ז'אנר בעולם הבידור שנועד להצחיק את הקהל."},
+  {w:"מעבדה",c:"מקום שבו עורכים ניסויים מדעיים ובדיקות."},
+  {w:"מנהרה",c:"מעבר תת-קרקעי שנחפר מתחת להר או מתחת למים."},
+  {w:"צדק",c:"העיקרון המוסרי שלפיו יש לתת לכל אחד את המגיע לו."},
+  {w:"השראה",c:"מצב של התעלות רוחנית שגורם ליצירתיות וליצירה."},
+  {w:"סינרגיה",c:"מצב שבו השלם גדול מסכום חלקיו בזכות שיתוף פעולה."},
+  {w:"מוזיאון",c:"מוסד השומר ומציג לציבור אוספים של אמנות, מדע או היסטוריה."},
+  {w:"אדריכל",c:"מתכנן מבנים וערים, המשלב בין הנדסה לאמנות."},
+  {w:"קונפליקט",c:"ניגוד אינטרסים או ריב בין שני צדדים."},
+  {w:"תקציב",c:"תכנית כלכלית המפרטת הכנסות והוצאות לתקופה מסוימת."},
+  {w:"מרתון",c:"ריצה למרחק ארוך מאוד, קרוי על שם קרב היסטורי ביוון."},
+  {w:"טלסקופ",c:"מכשיר המאפשר לצפות בעצמים רחוקים מאוד בחלל."},
+  {w:"תעמולה",c:"הפצת מידע, לעיתים מוטה, כדי להשפיע על דעת הקהל."},
+  {w:"גאומטריה",c:"ענף במתמטיקה העוסק בצורות, גדלים ומרחב."},
+  {w:"פרטיות",c:"זכותו של אדם לשמור על ענייניו האישיים הרחק מעין הציבור."},
+  {w:"אקולוגיה",c:"המדע העוסק ביחסי הגומלין בין היצורים החיים לסביבתם."},
+  {w:"הלוואה",c:"כסף שניתן לאדם בתנאי שיחזיר אותו בעתיד, בדרך כלל עם ריבית."},
+  {w:"מונופול",c:"מצב שבו חברה אחת בלבד שולטת בשוק של מוצר מסוים."},
+  {w:"מנהיג",c:"אדם העומד בראש קבוצה ומוביל אותה לעבר מטרה."},
+  {w:"קפאין",c:"חומר מעורר הנמצא בקפה, בתה ובמשקאות קלים."},
+  {w:"וירוס",c:"גורם מחלה זעיר שזקוק לתא חי כדי להתרבות, או תוכנה זדונית."},
+  {w:"יבשת",c:"שטח אדמה ענק ורציף על פני כדור הארץ, כמו אפריקה או אסיה."},
+  {w:"אקוסטיקה",c:"תורת הקול והאופן שבו הוא מתפשט בחלל."},
+  {w:"כוריאוגרפיה",c:"אמנות תכנון התנועות והצעדים בריקוד."},
+  {w:"אמפתיה",c:"היכולת להבין ולהרגיש את מה שעובר על אדם אחר."},
+  {w:"סטטיסטיקה",c:"איסוף, ניתוח והצגת נתונים מספריים."},
+  {w:"גלקסיה",c:"מערכת ענקית של כוכבים, גז ואבק המוחזקים יחד על ידי כבידה."},
+  {w:"חירות",c:"חופש פעולה ובחירה של אדם ללא כפייה חיצונית."},
+  {w:"יושרה",c:"הקפדה על עקרונות מוסריים, אמינות והגינות."},
+  {w:"זיכרון",c:"היכולת של המוח לשמור מידע ולשלוף אותו בעת הצורך."},
+  {w:"חוזה",c:"הסכם משפטי מחייב בין שני צדדים או יותר."},
+  {w:"מניות",c:"ניירות ערך המייצגים בעלות חלקית על חברה."},
+  {w:"מצלמה",c:"מכשיר המשמש לצילום תמונות או סרטונים."},
+  {w:"תיירות",c:"נסיעה של אנשים למקומות מחוץ לסביבתם הרגילה למטרות פנאי."},
+  {w:"רפואה",c:"המדע והפרקטיקה של אבחון, טיפול ומניעת מחלות."},
+  {w:"מתמטיקה",c:"שפת המספרים והצורות המשמשת לתיאור חוקי הטבע."},
+  {w:"ספרות",c:"אמנות הכתיבה של יצירות כמו סיפורים, שירים ומחזות."},
+  {w:"גאוגרפיה",c:"חקר פני כדור הארץ, האקלים והאוכלוסייה."},
+  {w:"אמנות",c:"ביטוי של יצירתיות ורגש באמצעים חזותיים או קוליים."},
+  {w:"כלכלה",c:"המדע החוקר את הייצור, ההפצה והצריכה של מוצרים ושירותים."},
+  {w:"פוליטיקה",c:"הפעילות הקשורה לניהול המדינה ולקבלת החלטות ציבוריות."},
+  {w:"חינוך",c:"תהליך של למידה, הקניית ידע וערכים."},
+  {w:"טכנולוגיה",c:"היישום המעשי של הידע המדעי לפתרון בעיות."},
+  {w:"אינטרנט",c:"רשת תקשורת עולמית המחברת בין מחשבים בכל העולם."},
+  {w:"ממשלה",c:"הגוף המנהל את ענייניה של מדינה ומקבל את ההחלטות עבורה."},
+  {w:"מהפכה",c:"שינוי פוליטי או חברתי דרמטי ומהיר, לעיתים באמצעות כוח."},
+  {w:"אנטיביוטיקה",c:"תרופה ההורגת חיידקים, אחת מהתגליות הרפואיות החשובות ביותר."},
+  {w:"דמיון",c:"היכולת של המוח לייצר תמונות ורעיונות שאינם מהמציאות."},
+  {w:"מגפה",c:"התפשטות מחלה מדבקת על פני אוכלוסייה גדולה. קורונה למשל."},
+  {w:"אנרכיה",c:"מצב של היעדר שלטון וסדר, כאוס חברתי."},
+  {w:"גמישות",c:"היכולת להתכופף בלי להישבר, גם פיזית וגם מנטלית."},
+  {w:"מדבר",c:"אזור יבש מאוד עם מעט גשם ומעט צמחייה, כמו סהרה."},
+  {w:"קרחון",c:"מסת קרח ענקית הנעה לאט לאט. נמסים בגלל התחממות גלובלית."},
+  {w:"תת מודע",c:"החלק של המוח שפועל מתחת לפני השטח, בלי שנשים לב."},
+  {w:"מפרץ",c:"שקע גדול בחוף הים שלאחוריו יבשה ולפניו מים."},
+  {w:"חוסן",c:"היכולת להתאושש ממשבר ולהמשיך קדימה."},
+  {w:"דיאלוג",c:"שיחה בין שניים או יותר, גם קטע שיחה בספר."},
+  {w:"ניסוי",c:"פעולה מבוקרת שנועדה לבדוק השערה מדעית."},
+  {w:"מסורת",c:"מנהגים ואמונות המועברים מדור לדור."},
+  {w:"ספינת חלל",c:"כלי רכב המיועד לנסיעה מחוץ לאטמוספירה של כדור הארץ."},
+  {w:"נפט",c:"חומר גולמי שחור שנחפר מהאדמה ומשמש לייצור דלק ופלסטיק."},
+  {w:"גשר",c:"מבנה המאפשר מעבר מעל נהר, עמק או כביש."},
+  {w:"אצטדיון",c:"מבנה ענק לאירועי ספורט ובידור, עם מסביב ספות לצופים."},
+  {w:"תזונה",c:"אוסף המזונות שאדם אוכל על בסיס קבוע וההשפעה שלהם על הגוף."},
+  {w:"זיהום",c:"נוכחות של חומרים מזיקים באוויר, מים או אדמה."},
+  {w:"חשמל",c:"זרם של אלקטרונים הנע במוליך. מפעיל את כל המכשירים שלנו."},
+  {w:"התמכרות",c:"מצב שבו אדם לא יכול להפסיק להשתמש בחומר או לבצע פעולה."},
+  {w:"הזדמנות",c:"מצב נוח שמציע יתרון או סיכוי להצליח."},
+  {w:"אמינות",c:"תכונה של מי שניתן לסמוך עליו ולהאמין לו."},
+  {w:"שיתוף פעולה",c:"עבודה משותפת של שניים או יותר להשגת מטרה משותפת."},
+  {w:"תחרות",c:"מאמץ להיות טוב יותר מהאחרים בתחום מסוים."},
+  {w:"פרסום",c:"הפצת מסרים שנועדו לשכנע אנשים לקנות מוצר או שירות."},
+  {w:"שוק מניות",c:"מקום שבו קונים ומוכרים חלקי בעלות בחברות."},
+  {w:"נבואה",c:"ניבוי של אירוע עתידי, לעיתים בהקשר דתי."},
+  {w:"גיבור",c:"אדם שביצע מעשה אמיץ יוצא דופן, או דמות ראשית בסיפור."},
+  {w:"עורך דין",c:"איש מקצוע המייצג לקוחות בהליכים משפטיים."},
+  {w:"ריבית",c:"הסכום הנוסף שמשלמים על הלוואה, מעבר לסכום המקורי."},
+  {w:"כריזמה",c:"כוח משיכה אישי, קסם שגורם לאנשים להתרשם ולעקוב."},
+  {w:"פנאי",c:"הזמן החופשי שנשאר אחרי העבודה שבו ניתן לנוח ולהנות."},
+  {w:"הומור",c:"היכולת לראות את הצד המצחיק של החיים ולצחוק."},
+  {w:"מגדלור",c:"מבנה גבוה הפולט אור כדי להדריך ספינות."},
+  {w:"גבול",c:"קו הפרדה בין שתי מדינות, גם מגבלה פסיכולוגית."},
+  {w:"ראיון",c:"שיחה מסודרת לשם קבלת עבודה, או שיחה עם עיתונאי."},
+  {w:"חלום",c:"חוויה שעוברים בשינה, גם שאיפה עתידית גדולה."},
+  {w:"כוח רצון",c:"היכולת לעמוד בפני פיתויים ולהתמיד במטרה."},
+  {w:"אחריות",c:"חובה לשאת בתוצאות של מעשינו, גם תפקיד שמוטל עלינו."},
+  {w:"שגרה",c:"סדר יום קבוע שחוזר על עצמו כל יום."},
+  {w:"כוח",c:"יכולת פיזית, או השפעה שיש לגורם מסוים על אחרים."},
+  {w:"שכר",c:"תשלום שמקבלים בעבור עבודה."},
+  {w:"מהירות",c:"שיעור השינוי במקום לאורך זמן. נמדדת בקמ שעה."},
+  {w:"קול",c:"גלי לחץ באוויר שהאוזן קולטת. גם הצבעה בבחירות."},
+  {w:"ריח",c:"תחושה שנוצרת כאשר מולקולות מגיעות לאף."},
+  {w:"גל",c:"תנועה מחזורית של אנרגיה דרך מדיום, גם בים."},
+  {w:"קרינה",c:"פליטה של אנרגיה בצורת גלים, כמו אור שמש."},
+  {w:"חיכוך",c:"כוח המתנגד לתנועה של שני גופים הנוגעים זה בזה."},
+  {w:"נוסחה",c:"ביטוי מתמטי או כימי המייצג קשר בין גדלים. גם שיטה מנצחת."},
+  // ═══ 300 NEW QUESTIONS ═══
+  {w:"בלשן",c:"חוקר שפות, מסתכל על מבנה הדקדוק ומשמעות המילים."},
+  {w:"קוסם",c:"עושה טריקים שנראים בלתי אפשריים, לפעמים עם מקל קסמים."},
+  {w:"פסיכיאטר",c:"רופא שמטפל בהפרעות נפשיות, יכול לרשום תרופות."},
+  {w:"וטרינר",c:"רופא לחיות מחמד ובעלי חיים אחרים."},
+  {w:"שף",c:"טבח מקצועי בדרגה גבוהה שמנהל מטבח."},
+  {w:"מיילדת",c:"מקצוען בתחום לידה שמסייע לאמהות בתהליך הלידה."},
+  {w:"סנדלר",c:"אומן שמייצר ומתקן נעליים בעבודת יד."},
+  {w:"צייד",c:"מי שרודף ותופס חיות בר בטבע."},
+  {w:"גנן",c:"עובד גינות, מטפח צמחים ועצים ומעצב גינות."},
+  {w:"ספרית",c:"אשת מקצוע שמספרת שיער ומעצבת תסרוקות."},
+  {w:"נגר",c:"אומן עצים המייצר רהיטים ואלמנטים מעץ."},
+  {w:"אינסטלטור",c:"מי שמתקן ומתקין צינורות מים וניקוז בבתים."},
+  {w:"חשמלאי",c:"מי שמתקין ומתקן מערכות חשמל בבניינים."},
+  {w:"מנקה",c:"מי שמסדר ומנקה בתים, משרדים ומבנים."},
+  {w:"טייס",c:"מי שמנהל ומטיס מטוסים ברחבי השמים."},
+  {w:"קברניט",c:"מי שמנהל ספינה בים, אחראי על הצוות והמסלול."},
+  {w:"קצין",c:"קצין בצבא שמוביל חיילים ומבצע פקודות."},
+  {w:"כבאי",c:"לוחם אש שמכבה שריפות ומציל חיים."},
+  {w:"חוקר",c:"מי שחוקר פשעים ומנסה לגלות את האמת."},
+  {w:"בלש",c:"חוקר פרטי שפותר תעלומות בשכר."},
+  {w:"מאמן",c:"מי שמדריך ספורטאים ומפתח את כישוריהם."},
+  {w:"שיפוט",c:"הנחיה מקצועית של מי שמפתח את יכולות האחרים."},
+  {w:"מנצח",c:"מוזיקאי שמנהל תזמורת עם מקל הנחייה."},
+  {w:"כוכב",c:"גוף שמיימי שפולט אור משלו, או כינוי לאדם מפורסם."},
+  {w:"ירח",c:"לוויין טבעי של כדור הארץ, מאיר בלילה."},
+  {w:"שמש",c:"הכוכב הקרוב אלינו ביותר, מספק אור וחום."},
+  {w:"כוכב לכת",c:"גוף שמיימי שחג סביב כוכב ואינו פולט אור עצמי."},
+  {w:"מטאוריט",c:"חתיכת סלע מהחלל שנפלה על פני כדור הארץ."},
+  {w:"שביט",c:"גוף שמיימי עם זנב אבק ואור הנראה בשמים."},
+  {w:"שחור חור",c:"אזור בחלל שמשיכת הכבידה שלו כה חזקה שאפילו אור אינו יכול לצאת ממנו."},
+  {w:"ביג בנג",c:"תיאוריה שלפיה היקום התחיל מנקודה אחת קטנה לפני כ-14 מיליארד שנה."},
+  {w:"חוק",c:"כלל מחייב שנחקק על ידי הממשלה ותקף לכל האזרחים."},
+  {w:"משפט",c:"הליך משפטי שבו שופט מחליט על אשמה או חפות."},
+  {w:"עדות",c:"מה שעד מספר בבית משפט על מה שראה."},
+  {w:"נאשם",c:"מי שמואשם בעבירה ומחכה לגזר דין."},
+  {w:"תביעה",c:"הגשת תלונה רשמית נגד אדם לבית משפט."},
+  {w:"פשע",c:"מעשה האסור על ידי החוק ושחוטא בו עלול להיענש."},
+  {w:"כלא",c:"מוסד שבו כולאים עבריינים שנידונו לתקופה."},
+  {w:"חקירה",c:"תהליך של איסוף עובדות כדי לגלות את האמת."},
+  {w:"ראיה",c:"מידע או חפץ המוכיח טענה בבית משפט."},
+  {w:"ערעור",c:"בקשה לבחון מחדש פסק דין שניתן."},
+  {w:"תקן",c:"רמה מוגדרת של איכות שמוצרים או שירותים צריכים לעמוד בה."},
+  {w:"מכס",c:"מס על סחורות המיובאות ממדינה אחרת."},
+  {w:"מס הכנסה",c:"מס שמשלמים לממשלה על הכסף שהרווחת."},
+  {w:"ביטוח",c:"הסכם שבו חברה משלמת לך כסף אם תיפגע או תאבד רכוש."},
+  {w:"פנסיה",c:"כסף שנחסך לאורך שנות העבודה ומשולם בגיל פרישה."},
+  {w:"השקעה",c:"שימוש בכסף כדי לקנות נכסים שיניבו רווח בעתיד."},
+  {w:"רווח",c:"הסכום שנשאר לאחר שמסירים את ההוצאות מהכנסות."},
+  {w:"גירעון",c:"מצב שבו ההוצאות עולות על ההכנסות."},
+  {w:"חוב",c:"כסף שאתה חייב להחזיר למישהו."},
+  {w:"שכירות",c:"תשלום חודשי עבור מגורים בדירה שאינה שלך."},
+  {w:"משכנתא",c:"הלוואה גדולה שלוקחים לרכישת דירה ומשלמים שנים רבות."},
+  {w:"מכרז",c:"תחרות שבה מוצע חוזה למציע המחיר הנמוך ביותר."},
+  {w:"יצוא",c:"מכירת מוצרים ממדינה אחת למדינה אחרת."},
+  {w:"יבוא",c:"קניית מוצרים ממדינה אחרת."},
+  {w:"מאזן",c:"דוח המסכם את הנכסים וההתחייבויות של חברה."},
+  {w:"מניפסט",c:"הצהרה פומבית של עמדות וכוונות, כמו של מפלגה."},
+  {w:"אידיאולוגיה",c:"מערכת של רעיונות ועקרונות הנוגעים לאופן ניהול החברה."},
+  {w:"ליברליזם",c:"אידיאולוגיה שמדגישה חירות הפרט ושוויון זכויות."},
+  {w:"קונסרבטיזם",c:"אידיאולוגיה שמדגישה שמירה על ערכים מסורתיים."},
+  {w:"סוציאליזם",c:"אידיאולוגיה שמדגישה שוויון ורכוש ציבורי."},
+  {w:"קומוניזם",c:"מערכת כלכלית שבה אין רכוש פרטי והמדינה שולטת בהכל."},
+  {w:"קפיטליזם",c:"מערכת כלכלית שבה עסקים פרטיים פועלים בשוק חופשי."},
+  {w:"פאשיזם",c:"אידיאולוגיה קיצונית של לאומנות, סמכות ושלטון עריצות."},
+  {w:"פמיניזם",c:"תנועה חברתית הדוגלת בשוויון זכויות לנשים."},
+  {w:"פציפיזם",c:"האמונה שניתן לפתור סכסוכים ללא אלימות ומלחמה."},
+  {w:"אנתרופולוג",c:"חוקר תרבויות אנושיות, מסתכל על מנהגים וחברות."},
+  {w:"סוציולוג",c:"חוקר חברה אנושית ויחסים בין קבוצות."},
+  {w:"כלכלן",c:"מומחה בניתוח מערכות כלכליות ותחזיות שוק."},
+  {w:"היסטוריון",c:"חוקר העבר ומנתח אירועים היסטוריים."},
+  {w:"ארכיון",c:"מקום שבו שומרים מסמכים היסטוריים חשובים."},
+  {w:"ביבליוגרפיה",c:"רשימה של מקורות שנעזרו בהם בכתיבת עבודה."},
+  {w:"ציטוט",c:"שימוש מילולי בדבריו של אחר עם ציון המקור."},
+  {w:"פרפרזה",c:"ניסוח מחדש של רעיון במילים שלך."},
+  {w:"מטאנרטיב",c:"סיפור גדול המסביר את כל ההיסטוריה, כמו הדת או המדע."},
+  {w:"ריאליזם",c:"גישה אמנותית המייצגת את המציאות כפי שהיא."},
+  {w:"אימפרסיוניזם",c:"סגנון ציור המתמקד בתחושות ובאור ולא בפרטים מדויקים."},
+  {w:"קוביזם",c:"סגנון אמנות המייצג נושאים מנקודות מבט מרובות בו זמנית."},
+  {w:"סוריאליזם",c:"אמנות המבוססת על חלומות ותת-מודע, מוזרה ובלתי רציונלית."},
+  {w:"מופשט",c:"אמנות שאינה מייצגת דברים מהעולם הממשי."},
+  {w:"פסל",c:"יצירת אמנות תלת-ממדית מחומרים כמו שיש, ברונזה או עץ."},
+  {w:"רישום",c:"יצירת תמונה באמצעות עיפרון, פחם או עט."},
+  {w:"צבעי מים",c:"טכניקת ציור עם צבעים מדוללים במים."},
+  {w:"פסיפס",c:"יצירת תמונה מאלפי קטעי אריחים קטנים."},
+  {w:"גרפיטי",c:"ציור על קירות ברחוב, לפעמים נחשב לאמנות רחוב."},
+  {w:"קליגרפיה",c:"אמנות הכתיבה היפה בכתב-יד מעוצב."},
+  {w:"תצלום",c:"תמונה שנצלמה עם מצלמה."},
+  {w:"אנימציה",c:"יצירת תמונות נעות סרט מצויר."},
+  {w:"מחשוב",c:"עיבוד מידע על ידי מחשב."},
+  {w:"קוד",c:"שפת הוראות שכותבים עבור מחשב."},
+  {w:"תוכנה",c:"אוסף של תוכניות ונתונים שמפעילים מחשב."},
+  {w:"חומרה",c:"החלקים הפיזיים של המחשב כמו מסך ומעבד."},
+  {w:"מעבד",c:"הלב של המחשב שמבצע חישובים."},
+  {w:"זיכרון",c:"מקום שמחשב מאחסן בו נתונים זמניים."},
+  {w:"דיסק קשיח",c:"מכשיר לאחסון נתונים לטווח ארוך במחשב."},
+  {w:"שרת",c:"מחשב עוצמתי שמספק שירות למחשבים אחרים ברשת."},
+  {w:"ענן",c:"שירות אחסון נתונים ומחשוב דרך האינטרנט, לא מקומי."},
+  {w:"הצפנה",c:"הפיכת מידע לקוד שרק מי שיש לו מפתח יכול לקרוא."},
+  {w:"פרטיות",c:"זכותו של אדם לשמור על ענייניו האישיים הרחק מעין הציבור."},
+  {w:"פישינג",c:"ניסיון לגנוב פרטי זהות על ידי הצגה כגורם אמין."},
+  {w:"כופרה",c:"תוכנה זדונית שנועלת קבצים ודורשת כסף בתמורה לשחרורם."},
+  {w:"בינה מלאכותית",c:"יכולת מחשב לחקות תהליכים קוגניטיביים אנושיים."},
+  {w:"למידת מכונה",c:"שיטה שבה מחשב לומד מנתונים ללא תכנות מפורש."},
+  {w:"רובוט",c:"מכונה ממוחשבת המסוגלת לבצע פעולות אוטומטיות."},
+  {w:"דרון",c:"מטוס בלתי מאויש הנשלט מרחוק."},
+  {w:"טלפון חכם",c:"מכשיר טלפון עם יכולות מחשב, מצלמה ואינטרנט."},
+  {w:"אפליקציה",c:"תוכנה לטלפון או טאבלט שמיועדת למשימה מסוימת."},
+  {w:"בלוג",c:"יומן אינטרנטי שבו כותבים מאמרים ורשימות."},
+  {w:"פודקאסט",c:"תוכנית אודיו להאזנה שניתן להוריד לטלפון."},
+  {w:"סטרימינג",c:"צפייה בסרטים ומוזיקה ישירות דרך האינטרנט בלי הורדה."},
+  {w:"הזנה חיה",c:"שידור בשידור חי דרך האינטרנט."},
+  {w:"האשטג",c:"מילה עם # לפניה המשמשת לסיווג פוסטים ברשתות חברתיות."},
+  {w:"וירלי",c:"תוכן שמתפשט מהר מאוד ברשתות החברתיות."},
+  {w:"מים",c:"חומר נוזלי שקוף וחסר טעם, חיוני לחיים."},
+  {w:"חמצן",c:"גז חסר צבע שכל בעל חיים צריך לנשום."},
+  {w:"פחמן",c:"יסוד כימי בסיסי לכל החיים. גם גז שגורם להתחממות הגלובלית."},
+  {w:"חנקן",c:"הגז הנפוץ ביותר באוויר שאנו נושמים."},
+  {w:"מימן",c:"הגז הקל ביותר ביקום, חלק מהמים."},
+  {w:"פלזמה",c:"מצב צבירה רביעי של חומר, כמו אש או ברק."},
+  {w:"מולקולה",c:"יחידה כימית הנוצרת מחיבור שני אטומים ומעלה."},
+  {w:"אטום",c:"היחידה הקטנה ביותר של יסוד כימי."},
+  {w:"אלקטרון",c:"חלקיק בעל מטען שלילי החוג סביב גרעין האטום."},
+  {w:"פרוטון",c:"חלקיק בגרעין האטום בעל מטען חיובי."},
+  {w:"נייטרון",c:"חלקיק נטול מטען בגרעין האטום."},
+  {w:"גרעין",c:"מרכז האטום, או המרכז של כל מערכת."},
+  {w:"מגנט",c:"חפץ שמושך מתכות ברזל ויוצר שדה מגנטי."},
+  {w:"חום",c:"אנרגיה המועברת בין עצמים בטמפרטורה שונה."},
+  {w:"קרינה",c:"אנרגיה המתפשטת בצורת גלים כמו אור שמש."},
+  {w:"מוליך",c:"חומר שמאפשר לחשמל לעבור דרכו."},
+  {w:"מבודד",c:"חומר שאינו מאפשר מעבר חשמל."},
+  {w:"מגנרוסקופ",c:"אזור בחלל שבו השדה המגנטי של כוכב לכת שולט."},
+  {w:"מטאבוליזם",c:"כל התגובות הכימיות בגוף החיה שמספקות לה אנרגיה."},
+  {w:"פוטוסינתזה",c:"תהליך שבו צמחים הופכים אור שמש, מים ופחמן לאנרגיה."},
+  {w:"נשימה",c:"תהליך שבו גופנו הופך חמצן לאנרגיה ופולט פחמן."},
+  {w:"עיכול",c:"פירוק המזון לחומרים מזינים שהגוף יכול לספוג."},
+  {w:"הפרשה",c:"פליטת חומרי פסולת מהגוף."},
+  {w:"חיסון",c:"חומר הניתן כדי להגן על הגוף ממחלה מסוימת."},
+  {w:"תאחיזה",c:"תנועת כוחות חיסוניים לאתר זיהום."},
+  {w:"כלי דם",c:"צינורות שדרכם זורם הדם בגוף."},
+  {w:"עורק",c:"כלי דם גדול המעביר דם מהלב לגוף."},
+  {w:"ורידה",c:"כלי דם שמחזיר דם מהגוף אל הלב."},
+  {w:"נוירון",c:"תא עצב המעביר אותות חשמליים במוח."},
+  {w:"סינפסה",c:"החיבור בין שני נוירונים שדרכו מועברים מסרים."},
+  {w:"הורמון",c:"מסרן כימי שמיוצר על ידי בלוטה ומשפיע על תפקודי הגוף."},
+  {w:"אנזים",c:"חלבון שמזרז תגובות כימיות בגוף."},
+  {w:"גן",c:"יחידת מידע תורשתי ב-DNA שקובעת תכונה."},
+  {w:"כרומוזום",c:"מבנה בתא המכיל את ה-DNA ואת המידע הגנטי."},
+  {w:"כלורופיל",c:"פיגמנט ירוק בצמחים האחראי על הפוטוסינתזה."},
+  {w:"עמילן",c:"פחמימה מורכבת הנמצאת בפירות ובלחם שהגוף הופך לאנרגיה."},
+  {w:"שומן",c:"מאקרונוטריינט חיוני לגוף לאנרגיה, בידוד ובניית תאים."},
+  {w:"חלבון",c:"אבני הבניין של הגוף, חיוניים לבניית שרירים ואנזימים."},
+  {w:"ויטמין",c:"חומר אורגני הדרוש לגוף בכמות קטנה לתפקוד תקין."},
+  {w:"מינרל",c:"חומר אנאורגני חיוני לגוף כמו סידן וברזל."},
+  {w:"פרוביוטיקה",c:"חיידקים ידידותיים שעוזרים לעיכול ולמערכת החיסון."},
+  {w:"גלוטן",c:"חלבון הנמצא בחיטה ודגנים אחרים. יש מי שאלרגי לו."},
+  {w:"לקטוז",c:"סוכר חלב שחלק מהאנשים קשה להם לעכל."},
+  {w:"קלוריה",c:"יחידת אנרגיה במזון. יותר מדי קלוריות גורמות להשמנה."},
+  {w:"אינדקס גליקמי",c:"מדד לקצב שבו מזון מעלה את רמת הסוכר בדם."},
+  {w:"אנורקסיה",c:"הפרעת אכילה שבה אדם מסרב לאכול מתוך פחד מהשמנה."},
+  {w:"השמנת יתר",c:"מצב שבו הגוף צובר שומן עודף מדי ופוגע בבריאות."},
+  {w:"סוכרת",c:"מחלה שבה הגוף אינו מסוגל לווסת את רמת הסוכר בדם."},
+  {w:"לחץ דם",c:"הכוח שהדם מפעיל על דפנות כלי הדם."},
+  {w:"כולסטרול",c:"חומר שומני בדם שבכמות גבוהה עלול לגרום לבעיות לב."},
+  {w:"אוסטיאופורוזיס",c:"מחלה שבה העצמות נחלשות ועלולות להישבר בקלות."},
+  {w:"דמנציה",c:"ירידה קוגניטיבית שמשפיעה על הזיכרון והחשיבה."},
+  {w:"שבץ",c:"הפסקה פתאומית של זרימת הדם למוח."},
+  {w:"אוטיזם",c:"מצב נוירולוגי המשפיע על תקשורת ואינטראקציה חברתית."},
+  {w:"דיסלקציה",c:"קושי בקריאה וכתיבה הנובע מהפרעה נוירולוגית."},
+  {w:"ADHD",c:"הפרעת קשב וריכוז הגורמת לחוסר ריכוז ואי שקט."},
+  {w:"פוביה",c:"פחד עז ובלתי רציונלי ממצב, חפץ או יצור."},
+  {w:"פאניקה",c:"פחד עז ופתאומי המלווה בתסמינים פיזיים כמו דפיקות לב."},
+  {w:"טראומה",c:"פגיעה נפשית עמוקה שנגרמת מאירוע קשה."},
+  {w:"שחיקה",c:"מצב של תשישות פיזית ונפשית בשל עבודה מרובה."},
+  {w:"הרפיה",c:"מצב של הפגת מתח ונחת פיזית ומנטלית."},
+  {w:"מדיטציה",c:"תרגול מיקוד הדעת לשם הרגעה ותשומת לב לרגע הנוכחי."},
+  {w:"יוגה",c:"שיטת אימון גוף ונפש המשלבת תנוחות, נשימה ומדיטציה."},
+  {w:"מיינדפולנס",c:"מצב של תשומת לב ומודעות לרגע הנוכחי."},
+  {w:"מוסיקה",c:"אמנות של צלילים המאורגנים בזמן, מביאה רגשות ואווירה."},
+  {w:"ריתמוס",c:"דפוס של חזרה בזמן שנותן מוסיקה לצורה."},
+  {w:"מלודיה",c:"רצף של צלילים שיוצר יחד לחן מוסיקלי."},
+  {w:"הרמוניה",c:"נגינה של מספר צלילים בו זמנית שנשמעת מושכת."},
+  {w:"גיטרה",c:"כלי נגינה בעל 6 מיתרים שמנגנים עליו ביד."},
+  {w:"פסנתר",c:"כלי נגינה שמנגנים עליו על ידי לחיצה על קלידים."},
+  {w:"כינור",c:"כלי מיתרים שמנגנים עליו עם קשת."},
+  {w:"תוף",c:"כלי הקשה שיוצר צלילים על ידי הכאה."},
+  {w:"חליל",c:"כלי נשיפה קטן שמנגנים עליו על ידי הזזת אצבעות."},
+  {w:"חצוצרה",c:"כלי נשיפה ממתכת שמוציא צליל חזק ובהיר."},
+  {w:"ג'אז",c:"סגנון מוסיקה אמריקאי המתאפיין באלתור."},
+  {w:"קלאסי",c:"מוסיקה של מלחינים גדולים כמו בטהובן ומוצרט."},
+  {w:"רוק",c:"סגנון מוסיקה עוצמתי עם גיטרות חשמליות ותופים."},
+  {w:"היפ הופ",c:"תרבות מוסיקלית עם ראפ, ריקוד ברחוב וגרפיטי."},
+  {w:"אלקטרוני",c:"מוסיקה המיוצרת בעיקר על ידי מכונות ומחשבים."},
+  {w:"ביטלס",c:"להקת הרוק הנודעת ביותר שהגיעה מליברפול באנגליה."},
+  {w:"מיקאל ג'קסון",c:"מלך הפופ, אחד הזמרים הגדולים בכל הזמנים."},
+  {w:"בטהובן",c:"מלחין גדול שהמשיך ליצור גם לאחר שהתחרש."},
+  {w:"מוצרט",c:"פנומן מוסיקלי שהחל לנגן בגיל שלוש."},
+  {w:"שייקספיר",c:"המחזאי הגדול ביותר בהיסטוריה, כתב רומיאו ויוליה."},
+  {w:"המלט",c:"מחזה מפורסם על נסיך שמתלבט אם לנקום על מות אביו."},
+  {w:"אודיסיאה",c:"אפוס יווני על מסעותיו של אודיסאוס הביתה לאחר מלחמת טרויה."},
+  {w:"מלחמת הכוכבים",c:"סאגת קולנוע מדע בדיוני עם ג'דאים, רובוטים וגלקסיות רחוקות."},
+  {w:"הארי פוטר",c:"ילד קוסם שלומד בבית ספר לקסמים ונלחם בשר הרשע."},
+  {w:"גיא פוקס",c:"אדם שניסה לפוצץ את הפרלמנט הבריטי ב-1605, כיום מסמל מחאה."},
+  {w:"מרטין לותר קינג",c:"מנהיג זכויות האזרח שנאם על חלומו לשוויון גזעי."},
+  {w:"נלסון מנדלה",c:"מנהיג דרום-אפריקה שנאסר 27 שנה ואחר כך נבחר לנשיאות."},
+  {w:"גנדי",c:"מנהיג הודי שנלחם לעצמאות על ידי מחאה לא אלימה."},
+  {w:"מדגסקר",c:"איי הענק באוקיינוס ההודי, מלא בחיות שלא נמצאות בשום מקום אחר."},
+  {w:"גרנד קניון",c:"עמק ענק ומרהיב בארצות הברית שנחצב על ידי נהר הקולורדו."},
+  {w:"מאמה",c:"מקדש הינדו הגדול ביותר בעולם, בבאלי."},
+  {w:"פיורד",c:"מפרץ ים עמוק ומוקף הרים, נפוץ בנורווגיה."},
+  {w:"נהר",c:"זרם מים המתנקז מאזורים גבוהים לאגמים, ימים ואוקיינוסים."},
+  {w:"אגם",c:"גוף מים הסגור ביבשה."},
+  {w:"ביצה",c:"שטח ספוג מים עם צמחייה עשירה."},
+  {w:"סלע",c:"חומר מינרלי קשה המרכיב את קרום כדור הארץ."},
+  {w:"מינרל",c:"חומר אנאורגני טבעי בעל מבנה גבישי מסוים."},
+  {w:"יהלום",c:"המינרל הקשה ביותר, עשוי מפחמן."},
+  {w:"זהב",c:"מתכת יקרה ומבריקה המשמשת לתכשיטים."},
+  {w:"כסף",c:"מתכת לבנה יקרה המשמשת לתכשיטים ואלקטרוניקה."},
+  {w:"ברזל",c:"מתכת שכיחה ועמידה המשמשת לבנייה ותעשייה."},
+  {w:"נחושת",c:"מתכת אדמדמה שמעבירה חשמל היטב, משמשת בחוטים."},
+  {w:"אלומיניום",c:"מתכת קלה משקל המשמשת לפחיות ומטוסים."},
+  {w:"בטון",c:"חומר בנייה קשיח העשוי ממלט, חול ואבנים."},
+  {w:"זכוכית",c:"חומר שקוף שנוצר מחימום חול."},
+  {w:"פלסטיק",c:"חומר סינתטי זול ורב-שימושי, גורם לזיהום סביבתי."},
+  {w:"גומי",c:"חומר גמיש ואלסטי הנמצא בצמחים מסוימים."},
+  {w:"סיב פחמן",c:"חומר מרכיב קל ועמיד מאוד המשמש לאביזרי ספורט ומטוסים."},
+  {w:"חיטה",c:"דגן עיקרי ממנו מייצרים קמח, לחם ופסטה."},
+  {w:"אורז",c:"דגן עיקרי שמהווה מזון בסיסי לרוב אסיה."},
+  {w:"תירס",c:"דגן שמקורו באמריקה, משמש למזון ולדלק."},
+  {w:"פולים",c:"קטנייה עשירה בחלבון המשמשת למאכל ולשמן."},
+  {w:"גפן",c:"צמח מטפס שפירותיו ענבים, ממנו מייצרים יין."},
+  {w:"זית",c:"עץ ים-תיכוני שפירותיו ושמנו נחשבים לבריאים."},
+  {w:"תפוח",c:"פרי נפוץ מאוד, גדל על עצי פרי."},
+  {w:"בננה",c:"פרי ארוך ומתוק בצבע צהוב שגדל באשכולות."},
+  {w:"אבטיח",c:"פרי קיץ גדול ואדום מבפנים, ירוק מבחוץ."},
+  {w:"תות",c:"פרי אדום וקטן, מתוק מאוד."},
+  {w:"אננס",c:"פרי טרופי מסורכס עם כתר עלים."},
+  {w:"מנגו",c:"פרי טרופי כתום ומתוק, הפרי הלאומי של הודו."},
+  {w:"אבוקדו",c:"פרי ירקרק שנחשב למזון בריא, עשיר בשומנים טובים."},
+  {w:"אספרגוס",c:"ירק ירוק דק שאוכלים את גבעוליו."},
+  {w:"כרובית",c:"ירק לבן שנאכל גם לאחר בישול ובצורת קמח."},
+  {w:"ברוקולי",c:"ירק ירוק בצורת עץ שעשיר בוויטמינים."},
+  {w:"חצילים",c:"ירק סגול בגינה שנאכל מבושל."},
+  {w:"קישוא",c:"ירק ירוק ומאורך בצורה של מלפפון."},
+  {w:"פלפל",c:"ירק בצבעים שונים שיכול להיות חריף או מתוק."},
+  {w:"עגבניה",c:"פרי שנחשב לירק, אדום ועסיסי, מרכיב עיקרי בסלט."},
+  {w:"מלפפון",c:"ירק ירוק וצוננן שנאכל טרי בסלטים."},
+  {w:"בצל",c:"ירק חריף שמוסיפים לבישולים ולפעמים גורם לבכי."},
+  {w:"שום",c:"ירק חריף ריחני שמוסיפים לבישולים, נחשב לבריא."},
+  {w:"גזר",c:"ירק כתום ומתוק שניתן לאכול חי ומבושל."},
+  {w:"לפת",c:"ירק שורש לבן שאוכלים בבישול."},
+  {w:"פטרוזיליה",c:"עשב ריחני ירוק ומשמש לקישוט ולטעם."},
+  {w:"כוסברה",c:"עשב ריחני שיש שאוהבים ויש ששונאים בגלל טעמו."},
+  {w:"מנטה",c:"עשב בעל ריח קריר ורענן, משמש לתה ולממתקים."},
+  {w:"רוזמרין",c:"עשב ריחני ודקיר שמשמש לבישול ותרופות עממיות."},
+  {w:"קינמון",c:"תבלין מתוק וחם שמגיע מקליפת עץ."},
+  {w:"פלפל שחור",c:"תבלין חריף הנפוץ ביותר בעולם."},
+  {w:"כורכום",c:"תבלין צהוב שמשמש בבישול הודי ונחשב לאנטי-דלקתי."},
+  {w:"זעפרן",c:"התבלין היקר בעולם, מייצרים מפרחי כרכום."},
+  {w:"ונילה",c:"תבלין מתוק שמגיע מתרמיל של אורכידאה."},
+  {w:"קפה",c:"משקה שחור מר שעוזר להתעורר, עשוי מגרעיני קפה."},
+  {w:"תה",c:"משקה חם שנוחל מעלים מיובשים, המשקה הנפוץ בעולם."},
+  {w:"יין",c:"משקה אלכוהולי שמיוצר מתסיסה של ענבים."},
+  {w:"בירה",c:"משקה אלכוהולי שמיוצר מחיטה ושעורה."},
+  {w:"לחם",c:"מזון בסיסי עשוי מקמח ומים שנאפה בתנור."},
+  {w:"גבינה",c:"מוצר חלב מוצק שמיוצר מקרישת חלב."},
+  {w:"יוגורט",c:"מוצר חלב שנוצר מחלב שעבר תסיסה."},
+  {w:"שוקולד",c:"ממתק שמיוצר מגרעיני קקאו."},
+  {w:"גלידה",c:"קינוח קפוא מתוק שמגיע בטעמים שונים."},
+  {w:"פיצה",c:"מאפה איטלקי עם בצק, עגבניות וגבינה."},
+  {w:"פסטה",c:"מזון איטלקי עשוי מקמח ומים בצורות שונות."},
+  {w:"סושי",c:"אוכל יפני עם אורז, דגים ואצות."},
+  {w:"המבורגר",c:"לחמניה עם קציצת בשר ותוספות, מאכל אמריקאי קלאסי."},
+  {w:"פלאפל",c:"קציצות ממוצר חומוס, מאכל טיפוסי ישראלי."},
+  {w:"חומוס",c:"ממרח מגרגרי חומוס, שמן זית ולימון, פופולרי בישראל."},
+  {w:"שוורמה",c:"בשר צלוי על שיפוד מסתובב, פינות אוכל ישראלי."},
+  {w:"קבב",c:"בשר טחון מתובל שצולים על גריל."},
+  {w:"גריל",c:"שיטת בישול על להבות גחלים פתוחות."},
+  {w:"תנור",c:"מכשיר חימום שאופים ומבשלים בו."},
+  {w:"מקרר",c:"מכשיר שמשמר מזון בקור."},
+  {w:"מיקרוגל",c:"מכשיר בישול שמחמם אוכל על ידי קרינה אלקטרומגנטית."},
+  {w:"שואב אבק",c:"מכשיר שמנקה רצפות על ידי יניקה."},
+  {w:"מכונת כביסה",c:"מכשיר אוטומטי לכביסת בגדים."},
+  {w:"מדיח כלים",c:"מכשיר שמנקה כלים אוטומטית."},
+  {w:"ברז",c:"מכשיר שדרכו זורמים מים ואפשר לפתוח ולסגור."},
+  {w:"מקלחת",c:"רחצה בעמידה תחת ראש מים מפזר."},
+  {w:"אמבטיה",c:"כלי רחצה גדול שממלאים מים ושוכבים בו."},
+  {w:"מיטה",c:"רהיט לשינה, מרוּפד ונוח."},
+  {w:"ספה",c:"רהיט רך לישיבה ממושכת בסלון."},
+  {w:"שולחן",c:"רהיט שעליו אוכלים, כותבים ועובדים."},
+  {w:"כיסא",c:"רהיט בעל רגליים ומשענת לישיבה."},
+  {w:"ארון",c:"רהיט גדול לאחסון בגדים."},
+  {w:"מדף",c:"פלטה אופקית שעליה מניחים חפצים."},
+  {w:"חלון",c:"פתח בקיר שמכוסה זכוכית שמאפשר אור ואוורור."},
+  {w:"דלת",c:"לוח שנסגר ונפתח לכניסה ויציאה."},
+  {w:"מנעול",c:"מכשיר אבטחה לנעילת דלת."},
+  {w:"מפתח",c:"כלי לפתיחת מנעול."},
+  {w:"מצית",c:"מכשיר קטן ליצירת אש."},
+  {w:"נר",c:"גוף שעווה עם פתיל שמאיר ומדליקים אותו."},
+  {w:"פנס",c:"מכשיר תאורה ניידת."},
+  {w:"מטרייה",c:"פטרייה מתקפלת שמגינה על הגוף מגשם."},
+  {w:"כובע",c:"כיסוי ראש המשמש להגנה ולאופנה."},
+  {w:"מעיל",c:"בגד חיצוני חם שלובשים בקור."},
+  {w:"כפפות",c:"כיסוי ידיים לחמימות."},
+  {w:"גרב",c:"כיסוי לרגל שלובשים מתחת לנעל."},
+  {w:"חגורה",c:"רצועה שמחזיקה את המכנסיים."},
+  {w:"צעיף",c:"בד ארוך כרוך סביב הצוואר לחמימות."},
+  {w:"שעון",c:"מכשיר למדידת הזמן."},
+  {w:"אחים",c:"ילדים בני אותה אם ואב."},
+  {w:"דוד",c:"אחי אחד ההורים."},
+  {w:"דודה",c:"אחות אחד ההורים."},
+  {w:"בן דוד",c:"ילד של הדוד או הדודה."},
+  {w:"נין",c:"ילד של הנכד."},
+  {w:"חמות",c:"אמא של הבן/בת הזוג."},
+  {w:"חותן",c:"אבא של הבן/בת הזוג."},
+  {w:"גיסה",c:"אחות הבן/בת הזוג."},
+  {w:"גיס",c:"אח הבן/בת הזוג."},
+  {w:"ידיד",c:"חבר קרוב שסומכים עליו."},
+  {w:"שכן",c:"מי שגר קרוב אלינו."},
+  {w:"עמית",c:"מי שעובד איתנו באותו מקום עבודה."},
+  {w:"מנטור",c:"מדריך מנוסה שמעביר ידע לאחרים."},
+  {w:"חניך",c:"מי שמקבל הדרכה ממנטור."},
+  {w:"יריב",c:"מי שמתחרה מולנו."},
+  {w:"גבורה",c:"מעשה אמיץ ויוצא דופן מתוך הקרבה."},
+  {w:"כבוד",c:"יחס של הערכה ואדיבות כלפי אחרים."},
+  {w:"ענווה",c:"ידיעת גבולות עצמך ללא התנשאות."},
+  {w:"אמץ",c:"אחיזה ביצורים רכים כגון חיות מחמד, גם תהליך אימוץ."},
+  {w:"ויתור",c:"הסכמה לאבד משהו לטובת הסכם."},
+  {w:"פשרה",c:"הסכם שבו שני הצדדים ויתרו קצת."},
+  {w:"תחנות",c:"מקומות בדרך שבהם עוצרים."},
+  {w:"מסלול",c:"נתיב מוגדר שעוקבים אחריו."},
+  {w:"מפה",c:"ייצוג חזותי של שטח גיאוגרפי."},
+  {w:"ניווט",c:"קביעת מסלול ממקום למקום."},
+  {w:"GPS",c:"מערכת לקביעת מיקום בעזרת לוויינים."},
+  {w:"כביש",c:"מסלול סלול לנסיעה ברכב."},
+  {w:"גשר",c:"מבנה העובר מעל מכשול כמו נהר."},
+  {w:"מנהרה",c:"מעבר תת-קרקעי."},
+  {w:"תמרור",c:"שלט המנחה נהגים."},
+  {w:"פקק",c:"עומס תנועה שגורם לעצירה ממושכת."},
+  {w:"חניה",c:"מקום ייעודי לעמידת רכב."},
+  {w:"מדרכה",c:"שביל בצד הכביש הייעודי להולכי רגל."},
+  {w:"מעבר חציה",c:"מקום מסומן שהולכי רגל עוברים בו את הכביש."},
+  {w:"אופניים",c:"כלי רכב הנע בכוח הרגליים עם שני גלגלים."},
+  {w:"קורקינט",c:"כלי רכב קטן עם לוח ושני גלגלים."},
+  {w:"רכבת",c:"כלי תחבורה ציבורי הנוסע על פסים."},
+  {w:"מטרו",c:"רכבת תחתית עירונית."},
+  {w:"אוטובוס",c:"כלי רכב גדול לתחבורה ציבורית."},
+  {w:"מונית",c:"מכונית שכורה עם נהג שנסיעות בתשלום."},
+  {w:"מסוק",c:"כלי טיס שמאפשר המראה ונחיתה אנכית."},
+  {w:"ספינה",c:"כלי שיט גדול הנוסע בים."},
+  {w:"קיאק",c:"סירה קטנה עם משוטים לנסיעה בנהרות ובים."},
+  {w:"רפסודה",c:"פלטפורמת ציפה עשויה עצים, דוברה."},
+  {w:"אוהל",c:"מבנה ניידת עשוי בד הנפרש לשינה בטבע."},
+  {w:"שק שינה",c:"כיסוי חם לשינה בחוץ."},
+  {w:"מחנאות",c:"שהייה בטבע עם ציוד שינה ובישול."},
+  {w:"טיול",c:"עלייה ברגל למקום טבעי."},
+  {w:"ספארי",c:"מסע לצפייה בחיות בר בסביבתן הטבעית."},
+  {w:"ספסל",c:"מושב ארוך עם מקום לכמה אנשים, נפוץ בפארקים."},
+  {w:"ערסל",c:"מיטה תלויה עשויה רשת, נוחה להתנדנד."},
+  {w:"גבעה",c:"עלייה גיאוגרפית קטנה יותר מהר."},
+  {w:"עמק",c:"שקע בין הרים."},
+  {w:"מפל",c:"ירידת מים גדולה ממצוק."},
+  {w:"מעיין",c:"מקום שבו מים תת-קרקעיים עולים לפני השטח."},
+  {w:"בור",c:"חפירה עמוקה בקרקע."},
+  {w:"מערה",c:"חלל טבעי בסלע."},
+  {w:"צוק",c:"קיר סלע תלול."},
+  {w:"חולות",c:"גרגרי סיליקה קטנים המרכיבים מדבר ושפת ים."},
+  {w:"שונית",c:"מבנה של אצות ואלמוגים מתחת למים."},
+  {w:"אלמוג",c:"יצור ים קטן שיוצר קולוניות צבעוניות."},
+  {w:"דג",c:"בעל חיים ימי שנושם מתחת למים בזימים."},
+  {w:"לווייתן",c:"היונק הגדול ביותר שחי בים."},
+  {w:"כריש",c:"דג טורף גדול בעל שיניים חדות."},
+  {w:"תמנון",c:"בעל חיים ים עם שמונה זרועות."},
+  {w:"עכביש",c:"פרוקרגליים בעל שמונה רגליים שטווה קורים."},
+  {w:"נמלה",c:"חרק חברתי הגר במושבות ועובד בצוות."},
+  {w:"דבורה",c:"חרק שמייצר דבש וחיוני להאבקה."},
+  {w:"פרפר",c:"חרק בעל כנפיים צבעוניות שעבר גלגול מזחל."},
+  {w:"עורב",c:"ציפור שחורה חכמה."},
+  {w:"נשר",c:"ציפור דורסת גדולה עם כנפי ענק."},
+  {w:"פינגווין",c:"ציפור שאינה יכולה לטוס אבל שוחה מצוין, חי באנטארקטיקה."},
+  {w:"קנגורו",c:"יונק אוסטרלי שקופץ על רגליו האחוריות."},
+  {w:"קואלה",c:"יונק אוסטרלי שישן כמעט כל היום ואוכל אקליפטוס."},
+  {w:"פנדה",c:"דב לבן-שחור מסין שאוכל רק במבוק."},
+  {w:"זברה",c:"סוס אפריקאי עם פסי שחור ולבן."},
+  {w:"ג'ירפה",c:"החיה בעלת הצוואר הארוך ביותר."},
+  {w:"קרנף",c:"יונק גדול עם קרן על אפו."},
+  {w:"היפופוטם",c:"יונק ים-נהרי גדול, אחת החיות המסוכנות ביותר."},
+  {w:"תנין",c:"זוחל גדול ומסוכן החי ליד מים."},
+  {w:"נחש",c:"זוחל ארוך חסר רגליים."},
+  {w:"צב",c:"זוחל עם שריון קשה על גבו."},
+  {w:"חמאל",c:"לטאה שמשנה צבעים לפי סביבתה."},
+  {w:"גורילה",c:"הקוף הגדול ביותר, בעל כוח עצום."},
+  {w:"שימפנזה",c:"הקרוב ביותר לבני האדם מבחינה גנטית."},
+  {w:"דולפין",c:"יונק חכם שחי בים ועושה קפיצות."},
+  {w:"אריה",c:"מלך הג'ונגל, חי בסוואנה האפריקאית."},
+  {w:"נמר",c:"חתול גדול מנוקד שנע בחשאי."},
+  {w:"כלב",c:"החיה המבויתת ביותר, חבר הטוב ביותר של האדם."},
+  {w:"חתול",c:"יונק חמוד ועצמאי שאוהב לישון."},
+  {w:"סוס",c:"יונק גדול שאפשר לרכוב עליו."},
+  {w:"פרה",c:"יונק שנותן חלב, משמשת לבשר."},
+  {w:"כבשה",c:"יונק שצמרה משמשת לייצור בגדים."},
+  {w:"עז",c:"יונק שנותן חלב מיוחד."},
+  {w:"חזיר",c:"יונק שמשמש לבשר, נחשב לחכם."},
+  {w:"תרנגולת",c:"עוף שנותן ביצים."},
+  {w:"ברווז",c:"עוף ים הנמצא בברכות ובנהרות."},
+  {w:"יונה",c:"ציפור סמל השלום, שימשה למסירת מסרים."},
+  {w:"תוכי",c:"ציפור צבעונית שמחקה צלילי אדם."},
+  {w:"כלוב",c:"מבנה בעל סורגים לכליאת חיות."},
+  {w:"גן חיות",c:"מקום שבו מגדלים חיות מפינות שונות לצפייה ציבורית."},
+  {w:"רזרבה טבעית",c:"אזור מוגן בו חיות בר חיות בחופשיות."},
+  {w:"כדורגל",c:"ספורט קבוצתי שמנסים להכניס כדור לשער."},
+  {w:"כדורסל",c:"ספורט שבו מנסים להכניס כדור לסל תלוי."},
+  {w:"טניס",c:"ספורט שמשחקים עם מחבט וכדור קטן ברשת."},
+  {w:"שחייה",c:"ספורט שמתבצע במים."},
+  {w:"אתלטיקה",c:"ספורט ריצה, קפיצה וזריקה."},
+  {w:"התעמלות",c:"ספורט שמציג גמישות כוח ואלגנטיות."},
+  {w:"אגרוף",c:"ספורט קרב עם ידיים עם כפפות."},
+  {w:"גלישה",c:"ספורט שגולשים עם גלשן על גלי הים."},
+  {w:"טיפוס הרים",c:"ספורט של טיפוס על קירות סלע ועל הרים."},
+  {w:"סקי",c:"ספורט חורף שגולשים על שלג עם לוחות."},
+  {w:"אליפות",c:"תחרות שבה נקבע מי הטוב ביותר."},
+  {w:"גביע",c:"פרס שמקבל הזוכה בתחרות."},
+  {w:"מדליה",c:"אות ספורטיבי שמוענק לזוכים."},
+  {w:"אולימפיאדה",c:"אירוע ספורטיבי בין-לאומי הנערך כל ארבע שנים."},
+  {w:"מונדיאל",c:"אליפות העולם בכדורגל."},
+  {w:"ספרינט",c:"ריצה קצרה ומהירה ביותר."},
+  {w:"מרתון",c:"ריצה של 42 קילומטר."},
+  {w:"חצי מרתון",c:"ריצה של 21 קילומטר."},
+  {w:"טריאתלון",c:"תחרות שמשלבת שחייה, רכיבה וריצה."},
+  {w:"מגרש",c:"שטח שמיועד לספורט."},
+  {w:"אצטדיון",c:"מקום ציבורי גדול לאירועי ספורט ובידור."},
+  {w:"דשא",c:"מכסה ירוק של עשב הנפוץ בשדות ובגינות."},
+  {w:"שרביט",c:"מקל פיקוד של מנהיג מדינה, גם כלי שמנגנים בו."},
+  {w:"מסמר",c:"חפץ מתכתי חד שמחברים חומרים יחד."},
+  {w:"ברגה",c:"כלי מתכתי בעל חריצים לסיבוב."},
+  {w:"מקדחה",c:"כלי ידני שמחורר חורים בחומרים."},
+  {w:"פטיש",c:"כלי לחבטות ולהדיפת מסמרים."},
+  {w:"מספריים",c:"כלי לחיתוך בד ונייר."},
+  {w:"מחט",c:"כלי חד דק לתפירה."},
+  {w:"חוט",c:"חוט דק לתפירה ולקשירה."},
+  {w:"צינור",c:"מבנה חלול ארוך להעברת נוזלים."},
+  {w:"שפופרת",c:"צינור קטן שתייה."},
+  {w:"קשית",c:"שפופרת פלסטיק לשתיית משקאות."},
+  {w:"מזלג",c:"כלי אוכל עם שיניים לדקירת מזון."},
+  {w:"מזמרה",c:"כלי חיתוך חד עם להב."},
+  {w:"כפית",c:"כלי אוכל קטן לערבוב ושאיבה."},
+  {w:"קדרה",c:"כלי בישול עמוק בעל מכסה."},
+  {w:"מחבת",c:"כלי בישול שטוח לטיגון."},
+  {w:"תבנית",c:"כלי אפייה שמכניסים לתנור."},
+  {w:"סיר",c:"כלי בישול עמוק לחימום נוזלים."},
+  {w:"מסנן",c:"כלי עם חורים להפרדת נוזל מחומר מוצק."},
+  {w:"מד טמפרטורה",c:"כלי למדידת חום, גם בגוף."},
+  {w:"שעון מעורר",c:"שעון שמשמיע קול בשעה שנקבעת מראש."},
+  {w:"מטרונום",c:"מכשיר שמכה בקצב קבוע לעזרת נגנים."},
+  {w:"לוח שנה",c:"מערכת מסודרת של ימים, שבועות וחודשים."},
+  {w:"שנה עברית",c:"שנה לפי הלוח היהודי, מוסיפים חודש בשנת שמיטה."},
+  {w:"שבת",c:"יום מנוחה שבועי ביהדות, מיום שישי בערב עד מוצ\"ש."},
+  {w:"חג",c:"יום מיוחד לציון אירוע היסטורי או דתי."},
+  {w:"ראש השנה",c:"חג יהודי לציון תחילת שנה חדשה."},
+  {w:"יום כיפור",c:"היום הכי קדוש ביהדות, יום צום ותשובה."},
+  {w:"פסח",c:"חג יהודי לזכר יציאת מצרים."},
+  {w:"חנוכה",c:"חג יהודי שמדליקים בו נרות שמונה ימים."},
+  {w:"פורים",c:"חג יהודי שמחה עם תחפושות ומגילת אסתר."},
+  {w:"כריסמס",c:"חג נוצרי לציון לידת ישו, עם עץ אורן ומתנות."},
+  {w:"עיד",c:"חג מוסלמי לסיום הצום של רמדאן."},
+  {w:"דיוואלי",c:"חג ההינדים של האורות."},
+  {w:"ליל סדר",c:"ערב פסח שבו מספרים על יציאת מצרים ואוכלים."},
+  {w:"ברית מילה",c:"טקס יהודי לתינוקות זכרים ביום השמיני לחייהם."},
+  {w:"בר מצווה",c:"טקס יהודי לנער בגיל 13."},
+  {w:"חתונה",c:"טקס ואירוע לציון איחוד שני אנשים."},
+  {w:"לוויה",c:"טקס לפרידה מאדם שנפטר."},
+  {w:"קמפינג",c:"שהות בטבע עם ציוד שינה ובישול."},
+  {w:"בזוקה",c:"נשק נגד שיריון בעל צינור."},
+  {w:"חומה",c:"גדר גדולה ואיתנה, כמו חומת סין."},
+  {w:"מצודה",c:"מבנה ביצורי שנועד להגנה."},
+];
+
+const SURPRISES = [
+  {icon:"⚡",title:"טורבו!",desc:"קיבלת 10 שניות נוספות!",fx:s=>{s.timer+=10;updTimer();showToast("⚡ +10 שניות!");}},
+  {icon:"💎",title:"בונוס כפול!",desc:"הנקודה הבאה שווה פעמיים!",fx:s=>{s.x2=true;showToast("💎 הנקודה הבאה x2!");}},
+  {icon:"🎯",title:"גנב נקודה!",desc:"גנבת נקודה מהיריב!",fx:s=>{const o=(s.p+1)%playerCount;if(s.sc[o]>0){s.sc[o]--;updSD(o);}showToast("🎯 גנבת נקודה!");}},
+  {icon:"🛡️",title:"מגן!",desc:"הניסיון הבא לא ייספר!",fx:s=>{s.shield=true;showToast("🛡️ מגן פעיל!");}},
+  {icon:"🔥",title:"שאלת אש!",desc:"הניחוש הבא שווה 2 נקודות!",fx:s=>{s.x2=true;showToast("🔥 x2 לניחוש הבא!");}},
+  {icon:"⏸️",title:"קפאון!",desc:"הטיימר נעצר 5 שניות!",fx:s=>{clearInterval(s.iv);setTimeout(()=>{if(s.active)resumeTimer()},5000);showToast("⏸️ קפאון 5 שניות!");}},
+  {icon:"🎲",title:"דילוג חינם!",desc:"הדילוג הבא ללא עונש!",fx:s=>{s.freeSkip=true;showToast("🎲 דילוג חינם!");}},
+  {icon:"🌟",title:"כוכב!",desc:"הניחוש הבא שווה 3 נקודות!",fx:s=>{s.x3=true;showToast("🌟 x3 לניחוש הבא!");}},
+  {icon:"🔄",title:"החלפת שאלה!",desc:"קיבלת שאלה חדשה בחינם!",fx:s=>{showToast("🔄 שאלה חדשה!");setTimeout(()=>newQ(),300);}},
+  {icon:"💣",title:"בום!",desc:"כל הנקודות שצברת בתור הזה מוכפלות!",fx:s=>{const bonus=Math.max(1,Math.floor(s.sc[s.p]/3));s.sc[s.p]+=bonus;updSD(s.p);showToast(`💣 +${bonus} בונוס!`);}},
+  {icon:"🤯",title:"מוח מתנפץ!",desc:"הניחוש הבא בלי מגבלת ניסיונות!",fx:s=>{s.maxAttempts=99;showToast("🤯 ניסיונות בלתי מוגבלים!");}},
+  {icon:"🎁",title:"מתנה!",desc:"קיבלת נקודה בונוס!",fx:s=>{s.sc[s.p]++;updSD(s.p);showToast("🎁 נקודת בונוס!");}},
+];
+
+const PLAYER_COLORS = ['var(--p1)','var(--p2)','var(--p3)','var(--p4)'];
+const PLAYER_EMOJIS = ['🔴','🔵','🟢','🟣'];
+const TURN_EMOJIS = ['🎮','🕹️','🎯','🏆'];
+
+const cfg = { win: 15, time: 45 };
+const st = {
+  names: [], sc:[], p:0,
+  word:null, typed:'', attempts:0, maxAttempts:3,
+  hintFree:true, hintUsed:false,
+  timer:45, iv:null, active:false,
+  used:new Set(), sqCount:0,
+  x2:false, x3:false, shield:false, freeSkip:false,
+  streak:0, totalQ:0, totalCorrect:0,
+  startTime: 0, selPos: -1,
+};
+
+const realInput = document.getElementById('real-input');
+
+// ═══ AUDIO ENGINE (Web Audio API — no external files) ═══
+let _ac = null;
+function getAC() {
+  if (!_ac) _ac = new (window.AudioContext || window.webkitAudioContext)();
+  if (_ac.state === 'suspended') _ac.resume();
+  return _ac;
+}
+function playTone(freq, type, duration, vol=0.18, fadeOut=true) {
+  try {
+    const ac = getAC();
+    const osc = ac.createOscillator();
+    const gain = ac.createGain();
+    osc.connect(gain); gain.connect(ac.destination);
+    osc.type = type; osc.frequency.setValueAtTime(freq, ac.currentTime);
+    gain.gain.setValueAtTime(vol, ac.currentTime);
+    if (fadeOut) gain.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + duration);
+    osc.start(ac.currentTime);
+    osc.stop(ac.currentTime + duration);
+  } catch(e) {}
+}
+function playChord(freqs, type='sine', dur=0.18, vol=0.12) {
+  freqs.forEach((f,i) => setTimeout(() => playTone(f, type, dur, vol), i*30));
+}
+const SFX = {
+  correct() { playChord([523, 659, 784], 'sine', 0.22, 0.14); },
+  wrong()   { playTone(180, 'sawtooth', 0.18, 0.12); setTimeout(()=>playTone(150,'sawtooth',0.18,0.10),100); },
+  tick()    { playTone(880, 'square', 0.04, 0.06, false); },
+  urgentTick() { playTone(1100, 'square', 0.05, 0.10, false); },
+  surprise() { [600,750,900,1100].forEach((f,i)=>setTimeout(()=>playTone(f,'sine',0.12,0.13),i*60)); },
+  win()     { const notes=[523,659,784,1047]; notes.forEach((f,i)=>setTimeout(()=>playTone(f,'sine',0.35,0.16),i*120)); },
+  skip()    { playTone(330, 'triangle', 0.15, 0.10); },
+  hint()    { playTone(660, 'sine', 0.20, 0.12); },
+  type()    { playTone(600 + Math.random()*200, 'sine', 0.05, 0.05); },
+  trans()   { playChord([392,494,587],'sine',0.25,0.12); },
+};
+
+// selected box position for click-to-edit (-1 = no selection, use normal cursor)
+
+function focusInput() {
+  realInput.focus({ preventScroll: true });
+  setTimeout(() => realInput.focus({ preventScroll: true }), 50);
+}
+
+realInput.addEventListener('keydown', e => {
+  if (!st.word || !st.active) return;
+  if (e.key === 'Enter') { e.preventDefault(); submitAnswer(); return; }
+  if (e.key === 'Backspace') {
+    e.preventDefault();
+    if (st.selPos >= 0) {
+      // delete the char at selPos and shift left
+      st.typed = st.typed.slice(0, st.selPos) + st.typed.slice(st.selPos + 1);
+      st.selPos = Math.max(0, st.selPos - 1);
+      if (st.typed.length === 0) st.selPos = -1;
+      renderBoxes();
+    } else if (st.typed.length > 0) {
+      st.typed = st.typed.slice(0, -1);
+      renderBoxes();
+    }
+    return;
+  }
+  // Arrow keys to move selection
+  if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+    e.preventDefault();
+    const total = st.word.w.replace(/ /g, '').length;
+    if (st.selPos < 0) {
+      st.selPos = st.typed.length > 0 ? st.typed.length - 1 : 0;
+    } else {
+      st.selPos += (e.key === 'ArrowLeft' ? 1 : -1); // RTL: left = higher index
+      st.selPos = Math.max(0, Math.min(total - 1, st.selPos));
+    }
+    renderBoxes();
+    return;
+  }
+  if (e.key === 'Escape') { e.preventDefault(); st.selPos = -1; renderBoxes(); return; }
+  if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+    e.preventDefault();
+    const total = st.word.w.replace(/ /g, '').length;
+    SFX.type();
+    if (st.selPos >= 0) {
+      // replace char at selPos
+      const arr = st.typed.split('');
+      arr[st.selPos] = e.key;
+      st.typed = arr.join('');
+      // advance selection
+      if (st.selPos < total - 1) st.selPos++;
+      else st.selPos = -1;
+      renderBoxes();
+    } else {
+      if (st.typed.length < total) { st.typed += e.key; renderBoxes(); }
+    }
+  }
+});
+
+realInput.addEventListener('input', () => {
+  if (!st.word || !st.active) return;
+  const total = st.word.w.replace(/ /g, '').length;
+  const val = realInput.value;
+  if (val.length > 0) {
+    for (const ch of [...val]) {
+      if (ch === '\n') continue;
+      SFX.type();
+      if (st.selPos >= 0) {
+        const arr = st.typed.split('');
+        arr[st.selPos] = ch;
+        st.typed = arr.join('');
+        if (st.selPos < total - 1) st.selPos++;
+        else st.selPos = -1;
+      } else {
+        if (st.typed.length < total) st.typed += ch;
+      }
+    }
+    realInput.value = '';
+    renderBoxes();
+  }
+});
+
+document.getElementById('game-screen').addEventListener('click', e => {
+  if (!['BUTTON'].includes(e.target.tagName)) focusInput();
+});
+
+// ═══ BUILD SCORES ═══
+function buildScores() {
+  const grid = document.getElementById('scores-grid');
+  grid.className = 'scores p' + playerCount;
+  grid.innerHTML = '';
+  for (let i = 0; i < playerCount; i++) {
+    grid.innerHTML += `
+      <div class="sc-card" id="card-${i}">
+        <div class="sc-name" id="scn-${i}">${st.names[i]}</div>
+        <div class="sc-num c${i}" id="scv-${i}">0</div>
+        <div class="sc-target" id="sct-${i}">יעד: ${cfg.win}</div>
+        <div class="pips" id="pips-${i}"></div>
+      </div>`;
+  }
+}
+
+// ═══ GAME START ═══
+function startGame() {
+  cfg.win = +document.getElementById('win-slider').value;
+  cfg.time = +document.getElementById('time-slider').value;
+  st.names = [];
+  for (let i = 1; i <= playerCount; i++) {
+    const el = document.getElementById('p' + i + '-name');
+    st.names.push(el ? el.value.trim() || `שחקן ${i}` : `שחקן ${i}`);
+  }
+  st.sc = Array(playerCount).fill(0);
+  st.p = 0;
+  st.used = new Set();
+  st.sqCount = 0;
+  st.x2 = false; st.x3 = false; st.shield = false; st.freeSkip = false;
+  st.streak = 0; st.totalQ = 0; st.totalCorrect = 0;
+  st.hintFree = true; st.hintUsed = false;
+  st.startTime = Date.now();
+
+  buildScores();
+  for (let i = 0; i < playerCount; i++) {
+    document.getElementById('scn-' + i).textContent = st.names[i];
+    document.getElementById('sct-' + i).textContent = 'יעד: ' + cfg.win;
+    buildPips(i);
+  }
+  showScreen('game-screen');
+  showPlayerTrans(0, true);
+}
+
+function buildPips(p) {
+  const el = document.getElementById('pips-' + p); el.innerHTML = '';
+  for (let i = 0; i < cfg.win; i++) {
+    const d = document.createElement('div');
+    d.className = 'pip'; d.id = 'pip-' + p + '-' + i; el.appendChild(d);
+  }
+}
+function updPips(p) {
+  for (let i = 0; i < cfg.win; i++) {
+    const pip = document.getElementById('pip-' + p + '-' + i);
+    if (pip) pip.classList.toggle('f' + p, i < st.sc[p]);
+  }
+}
+function updSD(p) { document.getElementById('scv-' + p).textContent = st.sc[p]; updPips(p); }
+function updCard() {
+  for (let i = 0; i < playerCount; i++) {
+    document.getElementById('card-' + i).className = 'sc-card' + (st.p === i ? ' a' + i : '');
+  }
+  const pill = document.getElementById('turn-pill');
+  pill.textContent = 'תור ' + st.names[st.p];
+  pill.className = 'turn-pill tp' + st.p;
+}
+
+// ═══ TIMER — ACCURATE ═══
+function startTimer() {
+  clearInterval(st.iv);
+  st.timer = cfg.time;
+  st._timerStart = performance.now();
+  st._timerRemain = cfg.time * 1000;
+  updTimer();
+  st.iv = setInterval(() => {
+    const elapsed = performance.now() - st._timerStart;
+    const remaining = Math.max(0, st._timerRemain - elapsed);
+    st.timer = Math.ceil(remaining / 1000);
+    updTimer();
+    if (remaining <= 0) { clearInterval(st.iv); endTurn(); }
+  }, 100);
+}
+function resumeTimer() {
+  st._timerStart = performance.now();
+  st._timerRemain = st.timer * 1000;
+  st.iv = setInterval(() => {
+    const elapsed = performance.now() - st._timerStart;
+    const remaining = Math.max(0, st._timerRemain - elapsed);
+    st.timer = Math.ceil(remaining / 1000);
+    updTimer();
+    if (remaining <= 0) { clearInterval(st.iv); endTurn(); }
+  }, 100);
+}
+function updTimer() {
+  const n = document.getElementById('t-num'), b = document.getElementById('t-bar');
+  n.textContent = st.timer;
+  b.style.width = Math.max(0, st.timer / cfg.time * 100) + '%';
+  const col = st.timer > cfg.time * 0.4 ? 'var(--green)' : st.timer > cfg.time * 0.2 ? 'var(--gold)' : 'var(--red)';
+  b.style.background = col; n.style.color = col;
+  if (st.timer <= 5 && st.timer > 0 && st.active) {
+    n.style.animation = 'pulse 0.4s ease-in-out';
+    setTimeout(() => n.style.animation = '', 400);
+    SFX.urgentTick();
+  } else if (st.timer <= 10 && st.timer > 5 && st.active) {
+    SFX.tick();
+  }
+}
+
+// ═══ QUESTION ═══
+function newQ() {
+  if (st.used.size >= DB.length) st.used.clear();
+  let idx; do { idx = Math.floor(Math.random() * DB.length); } while (st.used.has(idx));
+  st.used.add(idx); st.word = DB[idx];
+  st.typed = ''; st.attempts = 0; st.maxAttempts = 3; st.hintUsed = false;
+  st.selPos = -1;
+  realInput.value = '';
+  updateDots();
+  document.getElementById('clue-box').textContent = st.word.c;
+  buildBoxes(); renderBoxes(); updateHintBtn();
+  st.sqCount++;
+  if (st.sqCount >= 4 && Math.random() < 0.3) { st.sqCount = 0; setTimeout(triggerSurprise, 150); }
+  setTimeout(focusInput, 50);
+  updateStreakDisplay();
+}
+
+function updateStreakDisplay() {
+  const area = document.getElementById('streak-area');
+  if (st.streak >= 3) {
+    area.innerHTML = `<div class="streak-badge">🔥 רצף x${st.streak}!</div>`;
+  } else {
+    area.innerHTML = '';
+  }
+}
+
+function buildBoxes() {
+  const row = document.getElementById('letter-row'); row.innerHTML = '';
+  row.style.direction = 'rtl';
+  const words = st.word.w.split(' ');
+  let pos = 0;
+  words.forEach((word, wi) => {
+    const grp = document.createElement('div');
+    grp.className = 'word-group';
+    grp.style.cssText = 'display:flex;gap:4px;direction:ltr;';
+    const boxes = [];
+    for (let i = 0; i < word.length; i++) {
+      const box = document.createElement('div');
+      box.className = 'lbox'; box.dataset.pos = pos;
+      // click to select this box for editing
+      box.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (!st.active) return;
+        const p = +box.dataset.pos;
+        if (st.selPos === p) { st.selPos = -1; } // toggle off
+        else { st.selPos = p; }
+        SFX.hint();
+        renderBoxes();
+        focusInput();
+      });
+      boxes.push(box); pos++;
+    }
+    boxes.reverse().forEach(b => grp.appendChild(b));
+    row.appendChild(grp);
+    if (wi < words.length - 1) {
+      const sp = document.createElement('div'); sp.className = 'word-sp'; row.appendChild(sp);
+    }
+  });
+}
+
+function renderBoxes(state = 'normal') {
+  const boxes = document.querySelectorAll('#letter-row .lbox');
+  boxes.forEach(box => {
+    const pos = +box.dataset.pos;
+    box.textContent = st.typed[pos] || '';
+    box.className = 'lbox';
+    if (state === 'normal') {
+      if (st.selPos >= 0 && pos === st.selPos) box.classList.add('sel');
+      else if (st.selPos < 0 && pos === st.typed.length) box.classList.add('cur');
+    }
+    if (state === 'ok') box.classList.add('ok');
+    if (state === 'bad') box.classList.add('bad');
+  });
+}
+
+// ═══ SUBMIT ═══
+function submitAnswer() {
+  if (!st.word || !st.active) return;
+  const ans = st.typed.trim();
+  if (!ans) return;
+  st.totalQ++;
+  if (norm(ans) === norm(st.word.w)) {
+    st.selPos = -1;
+    st.totalCorrect++;
+    st.streak++;
+    let pts = 1;
+    if (st.x3) { pts = 3; st.x3 = false; }
+    else if (st.x2) { pts = 2; st.x2 = false; }
+    if (st.streak > 0 && st.streak % 5 === 0) { pts++; showToast(`🔥 רצף ${st.streak}! +בונוס!`); }
+    st.sc[st.p] += pts; updSD(st.p);
+    SFX.correct();
+    renderBoxes('ok');
+    spawnSparkle();
+    if (pts > 1 && st.streak % 5 !== 0) showToast('🌟 +' + pts + ' נקודות!');
+    if (st.sc[st.p] >= cfg.win) { clearInterval(st.iv); setTimeout(endGame, 500); return; }
+    setTimeout(() => { newQ(); focusInput(); }, 650);
+  } else {
+    st.selPos = -1;
+    st.streak = 0;
+    updateStreakDisplay();
+    SFX.wrong();
+    if (st.shield) { st.shield = false; showToast('🛡️ המגן הגן עליך!'); st.typed = ''; realInput.value = ''; renderBoxes(); return; }
+    st.attempts++; updateDots(); renderBoxes('bad');
+    setTimeout(() => { st.typed = ''; realInput.value = ''; renderBoxes(); focusInput(); }, 500);
+    if (st.attempts >= st.maxAttempts) setTimeout(() => { newQ(); focusInput(); }, 600);
+  }
+}
+
+function norm(s) {
+  return s.trim()
+    .replace(/[ְ-ׇ]/g, '')
+    .replace(/["'״׳""'']/g, '')
+    .replace(/\s+/g, ' ')
+    .toLowerCase();
+}
+function updateDots() { for (let i = 0; i < 3; i++) { document.getElementById('d' + i).className = 'adot' + (i < st.attempts ? ' bad' : ''); } }
+
+function skipWord() {
+  if (!st.active) return;
+  st.streak = 0; updateStreakDisplay();
+  st.selPos = -1;
+  SFX.skip();
+  if (st.freeSkip) { st.freeSkip = false; showToast('🎲 דילוג חינם!'); }
+  else { st.sc[st.p] = Math.max(0, st.sc[st.p] - 1); updSD(st.p); }
+  newQ(); focusInput();
+}
+
+function updateHintBtn() {
+  const badge = document.getElementById('hint-badge');
+  if (st.hintFree) { badge.textContent = 'FREE'; badge.style.background = 'var(--green)'; }
+  else { badge.textContent = '-2'; badge.style.background = 'var(--red)'; }
+}
+function useHint() {
+  if (!st.word || !st.active) return;
+  if (st.hintUsed) { showToast('💡 כבר השתמשת ברמז'); return; }
+  st.hintUsed = true;
+  SFX.hint();
+  const nsp = st.word.w.replace(/ /g, '');
+  if (st.hintFree) { st.hintFree = false; showToast('💡 אות ראשונה: ' + nsp[0]); updateHintBtn(); }
+  else {
+    if (st.sc[st.p] < 2) { showToast('❌ דרושות 2 נקודות לרמז'); return; }
+    st.sc[st.p] -= 2; updSD(st.p); showToast('💡 שתי אותיות ראשונות: ' + nsp[0] + nsp[1]);
+  }
+}
+
+// ═══ END TURN ═══
+function endTurn() {
+  clearInterval(st.iv);
+  st.active = false;
+  const nextP = (st.p + 1) % playerCount;
+  st.p = nextP;
+  st.x2 = false; st.x3 = false; st.shield = false; st.freeSkip = false;
+  st.streak = 0; updateStreakDisplay();
+  updCard();
+  setTimeout(() => showPlayerTrans(nextP, false), 250);
+}
+
+// ═══ PLAYER TRANSITION ═══
+function showPlayerTrans(pIdx, isFirst) {
+  SFX.trans();
+  const ov = document.getElementById('ptrans-ov');
+  const emojis = ['🔴','🔵','🟢','🟣'];
+  const funMessages = [
+    'הכן עצמך!', 'בהצלחה!', 'הגיע תורך!', 'אתה הכוכב!', 'קדימה!', 'תראה מה אתה שווה!',
+    'הזמן לזרוח!', 'אל תבייש אותנו!', 'תפתיע אותנו!', 'מוכן?'
+  ];
+  const msg = isFirst ? 'מסור את המכשיר לשחקן הראשון!' : 'מסור את המכשיר לשחקן הבא!';
+  document.getElementById('ptrans-emoji').textContent = emojis[pIdx];
+  document.getElementById('ptrans-title').textContent = 'תור ' + st.names[pIdx];
+  document.getElementById('ptrans-sub').textContent = msg + '\n' + funMessages[Math.floor(Math.random() * funMessages.length)];
+
+  const scoresEl = document.getElementById('ptrans-scores');
+  scoresEl.innerHTML = '';
+  for (let i = 0; i < playerCount; i++) {
+    scoresEl.innerHTML += `<div class="pts-mini"><div class="pts-mini-name">${st.names[i]}</div><div class="pts-mini-sc c${i}">${st.sc[i]}</div></div>`;
+  }
+  ov.classList.add('show');
+}
+
+function closeTrans() {
+  document.getElementById('ptrans-ov').classList.remove('show');
+  updCard();
+  st.active = true;
+  newQ(); startTimer(); focusInput();
+}
+
+// ═══ QUIT ═══
+function confirmQuit() {
+  if (confirm('לצאת למסך הראשי? המשחק יאבד.')) {
+    clearInterval(st.iv);
+    st.active = false;
+    showScreen('setup-screen');
+  }
+}
+
+// ═══ SURPRISE ═══
+function triggerSurprise() {
+  clearInterval(st.iv);
+  SFX.surprise();
+  const s = SURPRISES[Math.floor(Math.random() * SURPRISES.length)];
+  document.getElementById('surp-icon').textContent = s.icon;
+  document.getElementById('surp-title').textContent = s.title;
+  document.getElementById('surp-desc').textContent = s.desc;
+  document.getElementById('surp-ov').classList.add('show');
+  window._surp = s;
+}
+function closeSurprise() {
+  document.getElementById('surp-ov').classList.remove('show');
+  if (window._surp) { window._surp.fx(st); window._surp = null; }
+  resumeTimer(); focusInput();
+}
+
+// ═══ WIN ═══
+function endGame() {
+  st.active = false; clearInterval(st.iv);
+  let winnerIdx = 0;
+  for (let i = 1; i < playerCount; i++) {
+    if (st.sc[i] > st.sc[winnerIdx]) winnerIdx = i;
+  }
+  const duration = Math.round((Date.now() - st.startTime) / 1000);
+  const accuracy = st.totalQ > 0 ? Math.round(st.totalCorrect / st.totalQ * 100) : 0;
+
+  document.getElementById('win-trophy').textContent = '🏆';
+  const t = document.getElementById('win-title');
+  t.textContent = st.names[winnerIdx] + ' ניצח! 🎉';
+  t.style.color = PLAYER_COLORS[winnerIdx];
+  document.getElementById('win-sub').textContent = 'סיים עם ' + st.sc[winnerIdx] + ' נקודות';
+
+  // stats
+  const statsRow = document.getElementById('win-stats-row');
+  const mins = Math.floor(duration / 60);
+  const secs = duration % 60;
+  statsRow.innerHTML = `
+    <div class="win-stat"><div class="win-stat-val">${mins}:${String(secs).padStart(2,'0')}</div><div class="win-stat-lbl">זמן</div></div>
+    <div class="win-stat"><div class="win-stat-val">${st.totalQ}</div><div class="win-stat-lbl">שאלות</div></div>
+    <div class="win-stat"><div class="win-stat-val">${accuracy}%</div><div class="win-stat-lbl">דיוק</div></div>
+  `;
+
+  // final scores
+  const finalRow = document.getElementById('final-row');
+  finalRow.innerHTML = '';
+  for (let i = 0; i < playerCount; i++) {
+    finalRow.innerHTML += `<div class="fc ${i === winnerIdx ? 'winner' : ''}">
+      <div class="fc-name c${i}" id="fcn${i}">${st.names[i]}</div>
+      <div class="fc-sc c${i}">${st.sc[i]}</div>
+    </div>`;
+  }
+
+  showScreen('win-screen');
+  SFX.win();
+  setTimeout(launchConfetti, 200);
+  saveToLeaderboard(st.names[winnerIdx], st.sc[winnerIdx], duration);
+}
+
+// ═══ CONFETTI ═══
+function launchConfetti() {
+  const colors = ['#e8421a','#1a72e8','#1a9e6b','#d4920a','#9b1ae8','#e83c9b','#43e8a0'];
+  for (let i = 0; i < 80; i++) {
+    setTimeout(() => {
+      const el = document.createElement('div');
+      el.className = 'confetti-piece';
+      el.style.cssText = `
+        left: ${Math.random() * 100}vw;
+        top: 0;
+        background: ${colors[Math.floor(Math.random() * colors.length)]};
+        --dur: ${1.5 + Math.random() * 2}s;
+        --tx: ${-100 + Math.random() * 200}px;
+        --rot: ${Math.random() * 720 - 360}deg;
+        --br: ${Math.random() > 0.5 ? '50%' : '0'};
+        width: ${6 + Math.random() * 10}px;
+        height: ${6 + Math.random() * 10}px;
+      `;
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 4000);
+    }, i * 40);
+  }
+}
+
+// ═══ SPARKLE ═══
+function spawnSparkle() {
+  const emojis = ['✨','💫','⭐','🌟','💥'];
+  const el = document.createElement('div');
+  el.className = 'sparkle';
+  el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+  el.style.cssText = `top: ${30 + Math.random() * 40}vh; left: ${10 + Math.random() * 80}vw;`;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 800);
+}
+
+// ═══ LEADERBOARD ═══
+function saveToLeaderboard(name, score, duration) {
+  try {
+    const lb = JSON.parse(localStorage.getItem('alias-lb') || '[]');
+    lb.push({ name, score, duration, date: new Date().toLocaleDateString('he-IL') });
+    lb.sort((a, b) => b.score - a.score);
+    lb.splice(10);
+    localStorage.setItem('alias-lb', JSON.stringify(lb));
+  } catch (e) {}
+}
+function showLeaderboard() {
+  const list = document.getElementById('lb-list');
+  try {
+    const lb = JSON.parse(localStorage.getItem('alias-lb') || '[]');
+    if (lb.length === 0) {
+      list.innerHTML = '<div class="lb-empty">עדיין אין שיאים. שחקו כדי לרשום!</div>';
+      return;
+    }
+    list.innerHTML = lb.map((e, i) => {
+      const rankClass = i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : '';
+      const rankLabel = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '#' + (i+1);
+      const mins = Math.floor((e.duration||0) / 60);
+      const secs = (e.duration||0) % 60;
+      return `<div class="lb-row">
+        <div class="lb-rank ${rankClass}">${rankLabel}</div>
+        <div class="lb-info">
+          <div class="lb-name">${e.name}</div>
+          <div class="lb-meta">${e.date} · ${mins}:${String(secs).padStart(2,'0')} משחק</div>
+        </div>
+        <div class="lb-score">${e.score}</div>
+      </div>`;
+    }).join('');
+  } catch (e) {
+    list.innerHTML = '<div class="lb-empty">שגיאה בטעינת שיאים</div>';
+  }
+}
+function clearLeaderboard() {
+  if (confirm('למחוק את כל השיאים?')) {
+    localStorage.removeItem('alias-lb');
+    showLeaderboard();
+  }
+}
+
+// ═══ SCREEN ═══
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if (id === 'leaderboard-screen') showLeaderboard();
+}
+
+// ═══ TOAST ═══
+let _tt = null;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(_tt); _tt = setTimeout(() => t.classList.remove('show'), 2200);
+}
+</script>
+</body>
+</html>
